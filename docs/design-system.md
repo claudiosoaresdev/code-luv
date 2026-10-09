@@ -5,7 +5,7 @@ Documento vivo. Define **a linguagem visual e de interação do CodeLuv**: princ
 > **Regra deste documento:** toda decisão visual é um **token** ou uma **regra nomeada**. Nada de valor solto. Se um valor aparece no produto e não existe aqui, ou ele entra com nome e motivo, ou sai do produto. O teste: **uma pessoa nova deve conseguir montar uma tela coerente usando só este documento**, sem perguntar "qual cor eu uso?".
 
 > **Status:** rascunho completo, aguardando revisão.
-> **Última revisão:** 2026-10-09 · **Responsável:** Claudio Soares · **Versão do design system:** 0.5.0
+> **Última revisão:** 2026-10-09 · **Responsável:** Claudio Soares · **Versão do design system:** 0.6.0
 > **Fonte no design:** [moodboard](./assets/moodboard.webp) e logos em `public/images/` · **Fonte no código:** `src/app/globals.css` (tokens), `src/components/ui/` (base [shadcn/ui](https://ui.shadcn.com), estilo `base-nova` sobre Base UI — DS-09) e `src/components/` (componentes do CodeLuv)
 
 **Documentos relacionados:** [Briefing](./briefing.md) (por que existe) · PRD (o que precisa fazer — a escrever) · Architecture (como é construído — a escrever).
@@ -391,8 +391,8 @@ A base é o shadcn/ui (DS-09): os 61 componentes estão em `src/components/ui/` 
 | `EmptyState`                                  | feedback     | `empty` + `LuvAvatar`                                                                                                                | —                                                                                | pronto           |
 | `ListenControls`                              | aprendizagem | `card` + `button` + `toggle-group` — `src/components/aula/listen-controls.tsx`                                                       | `ToggleGroup`: 48px, item pressionado em `bg-primary`                            | pronto           |
 | `ReadAlongText`                               | aprendizagem | CSS Custom Highlight API (`::highlight(leitura)`) sobre o texto MDX — `src/components/aula/escuta.tsx` + `src/lib/escuta/trechos.ts` | —                                                                                | pronto           |
-| `CodeEditor`                                  | aprendizagem | CodeMirror 6 (`@codemirror/*`) com tema do DS — `src/components/aula/code-editor.tsx`                                                | —                                                                                | pronto           |
-| `ResultPreview`                               | aprendizagem | `RetroWindow` + `iframe sandbox=""` — `src/components/aula/result-preview.tsx`                                                       | —                                                                                | pronto           |
+| `CodeEditor`                                  | aprendizagem | CodeMirror 6 (`@codemirror/*`, HTML e CSS) com tema do DS — `src/components/aula/code-editor.tsx`                                    | —                                                                                | pronto           |
+| `ResultPreview`                               | aprendizagem | `RetroWindow` + `iframe sandbox=""` — `src/components/aula/result-preview.tsx`                                                       | "Ver como celular" (`toggle`, 360px) nas aulas de CSS                            | pronto           |
 | `CheckList`                                   | aprendizagem | `item` (`outline`) em `item-group` — `src/components/aula/check-list.tsx`                                                            | —                                                                                | pronto           |
 | `HintPanel`                                   | aprendizagem | `alert` (`warning`) + `button` — `src/components/aula/hint-panel.tsx`                                                                | nova variante `warning`; contorno 2px                                            | pronto           |
 | `PaginaNaoEncontrada`                         | feedback     | `LuvSays` + `buttonVariants` — `src/app/not-found.tsx`                                                                               | —                                                                                | pronto           |
@@ -464,7 +464,7 @@ As variantes `secondary` e `link` do shadcn existem no código, mas não fazem p
 
 - **Para que serve:** escrever código e ver o resultado na hora.
 - **Anatomia:** abas por linguagem (`Tabs`, só as da aula) · área de código (`type.code`, numeração de linhas, fundo `color.bg.surface.raised`) · `RetroWindow` com título "Meu site" contendo o resultado · barra de ações (`Conferir` primary, `Recomeçar` secondary).
-- **Cores do código:** tema de realce próprio, a partir da paleta (tags em `pink.400`, atributos em `violet.300`, textos em `cream.100`, comentários em `ink.400`) — todos ≥ 4.5:1 sobre `color.bg.surface.raised` e sobre a linha ativa, que usa `color.bg.surface` (`ink.900`), mais escura. Exemplos de código na explicação recebem foco pelo teclado, porque podem rolar para o lado.
+- **Cores do código:** tema de realce próprio, a partir da paleta (tags e seletores em `pink.400`, atributos e propriedades de CSS em `violet.300`, valores em `pink.100`, textos em `cream.100`, comentários em `ink.400`) — todos ≥ 4.5:1 sobre `color.bg.surface.raised` e sobre a linha ativa, que usa `color.bg.surface` (`ink.900`), mais escura. Exemplos de código na explicação recebem foco pelo teclado, porque podem rolar para o lado.
 - **Regras:** o resultado **não herda** nenhum estilo do CodeLuv (fundo branco padrão do navegador até a aluna mudar). Erro que impede o resultado: mensagem curta dentro da janela, em `color.feedback.warning`, nunca tela vermelha.
 
 **CheckList** — conferência
@@ -648,6 +648,8 @@ Não há aplicativo nativo previsto.
 | Espaço para ouvir/pausar e dica de teclado (DS 8.2) | código             | o Espaço só aciona o botão em foco (nativo); não há dica `kbd` dos atalhos ← →                                                                                                                                                                                 | manter o comportamento nativo; avaliar a dica com a aluna                                                                                                       | Fase 2  |
 | Robustez da voz do navegador                        | código             | não há vigia para fala ignorada logo após cancelar (alguns Chrome de Linux/Android) nem tratamento do corte de ~15s de vozes de rede do Google                                                                                                                 | observar no uso real; frases são curtas                                                                                                                         | —       |
 | Atalhos ← → nos limites                             | código             | ← no primeiro trecho repete o trecho; → no último não faz nada (os botões ficam desabilitados)                                                                                                                                                                 | manter                                                                                                                                                          | —       |
+| Site de exemplo nas aulas de CSS                    | código             | sem HTML concluído, o CSS aparece nas soluções das aulas de HTML (o "site da Ana"), com aviso ligado ao resultado por `aria-describedby` (prática, aula concluída e Meu site)                                                                                  | manter                                                                                                                                                          | —       |
+| Conferência de CSS e herança                        | código             | a conferência pede o seletor da aula; cor herdada do `body` aparece certa no resultado, mas não passa no item (DS-14)                                                                                                                                          | observar com a aluna                                                                                                                                            | Fase 2  |
 
 ---
 
@@ -787,6 +789,16 @@ Não há aplicativo nativo previsto.
 - **Tokens / componentes afetados:** `LessonDone`, `SitePreview`, padrão "Conclusão de aula".
 - **Revisar se:** a aluna sentir falta da Luv comemorando.
 
+**DS-14 — A conferência de CSS lê as regras escritas**
+
+- **Data:** 2026-10-09
+- **Contexto:** o módulo de CSS precisa conferir a prática. O resultado na tela aceitaria qualquer caminho, mas depende de desenhar a página e é difícil de testar e de explicar numa pista.
+- **Alternativas consideradas:** medir o estilo calculado no resultado; ler as regras escritas.
+- **Decisão:** ler as regras (`css-tree`): "existe uma regra para `h1` com `color`". Declaração com valor inválido não conta, como no navegador; valores com `var()` contam como válidos (o analisador não consegue validá-los) e regras dentro de qualquer `@media`, até aninhada em `@supports`, são reconhecidas.
+- **Por quê:** previsível, igual nos testes e no navegador, e cada item da conferência vira uma pista clara.
+- **O que abrimos mão:** caminhos que chegam ao mesmo resultado por outro seletor (por exemplo, cor herdada do `body`) não passam no item.
+- **Revisar se:** a aluna travar com frequência num item que o resultado já mostra certo.
+
 ---
 
 ## Histórico deste documento
@@ -803,6 +815,7 @@ Não há aplicativo nativo previsto.
 | 2026-10-09 | 0.4.0 — Plano 3 entregue: escuta com ListenControls e destaque do trecho (ReadAlongText)                                                                                                | Claudio Soares |
 | 2026-10-09 | 0.4.1 — revisão final do Plano 3: rolagem respeita os controles fixos, foco na seção Prática, alto contraste no destaque                                                                | Claudio Soares |
 | 2026-10-09 | 0.5.0 — Plano 4 entregue: progresso no aparelho, primeiro uso, Meu site, conquistas e cópia do progresso (DS-13)                                                                        | Claudio Soares |
+| 2026-10-09 | 0.6.0 — Plano 5 entregue: módulo de CSS, editor de CSS, "Ver como celular" e conferência por regras (DS-14)                                                                             | Claudio Soares |
 
 ---
 
