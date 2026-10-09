@@ -16,7 +16,7 @@ type ResultPreviewProps = {
   html: string
   /** Mostra "Ver como celular" (aulas de CSS). */
   podeVerComoCelular?: boolean
-  /** Altura do iframe; padrão h-64. */
+  /** Classes extras do iframe, como a altura (padrão h-64). */
   className?: string
 }
 
@@ -56,9 +56,9 @@ export function ResultPreview({
           srcDoc={mostrado}
           sandbox=""
           className={cn(
-            'bg-white',
-            celular ? 'mx-auto block w-[360px] max-w-full' : 'w-full',
-            className ?? 'h-64',
+            'block h-64 bg-white',
+            celular ? 'mx-auto w-[360px] max-w-full' : 'w-full',
+            className,
           )}
         />
       </RetroWindow>
