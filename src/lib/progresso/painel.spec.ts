@@ -110,7 +110,7 @@ describe('mapaDeDias', () => {
       aulas: {
         a: {
           conferencias: 1,
-          concluidaEm: new Date(2026, 9, 7, 15).toISOString(),
+          concluidaEm: new Date(2026, 9, 7, 23).toISOString(),
         },
       },
     })

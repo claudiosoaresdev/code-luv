@@ -28,6 +28,9 @@ const EXTENSO = [
   'cinco',
   'seis',
   'sete',
+  'oito',
+  'nove',
+  'dez',
 ]
 
 export type DiaDaSemana = {
