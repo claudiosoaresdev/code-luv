@@ -5,7 +5,7 @@ Documento vivo. Define **a linguagem visual e de interação do CodeLuv**: princ
 > **Regra deste documento:** toda decisão visual é um **token** ou uma **regra nomeada**. Nada de valor solto. Se um valor aparece no produto e não existe aqui, ou ele entra com nome e motivo, ou sai do produto. O teste: **uma pessoa nova deve conseguir montar uma tela coerente usando só este documento**, sem perguntar "qual cor eu uso?".
 
 > **Status:** rascunho completo, aguardando revisão.
-> **Última revisão:** 2026-10-09 · **Responsável:** Claudio Soares · **Versão do design system:** 0.4.0
+> **Última revisão:** 2026-10-09 · **Responsável:** Claudio Soares · **Versão do design system:** 0.4.1
 > **Fonte no design:** [moodboard](./assets/moodboard.webp) e logos em `public/images/` · **Fonte no código:** `src/app/globals.css` (tokens), `src/components/ui/` (base [shadcn/ui](https://ui.shadcn.com), estilo `base-nova` sobre Base UI — DS-09) e `src/components/` (componentes do CodeLuv)
 
 **Documentos relacionados:** [Briefing](./briefing.md) (por que existe) · PRD (o que precisa fazer — a escrever) · Architecture (como é construído — a escrever).
@@ -292,11 +292,11 @@ Estratégia **mobile-first**.
 
 ### 5.2 Estruturas de página
 
-| Estrutura                 | Quando usar                                                                                                                                     | Comportamento no celular                                              |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| **Coluna única**          | Início, lista de aulas, conquistas, configurações                                                                                               | igual, com margem de 16px                                             |
-| **Aula dividida**         | Aula, a partir de `lg`: explicação à esquerda (até `measure.reading`), prática à direita (editor + resultado), lado a lado e com altura da tela | empilha: explicação → prática; o controle da escuta fica fixo na base |
-| **Prática em tela cheia** | Editar o site pessoal livremente                                                                                                                | resultado vira uma aba ao lado do editor ("Código" · "Resultado")     |
+| Estrutura                 | Quando usar                                                                                                                                     | Comportamento no celular                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Coluna única**          | Início, lista de aulas, conquistas, configurações                                                                                               | igual, com margem de 16px                                                        |
+| **Aula dividida**         | Aula, a partir de `lg`: explicação à esquerda (até `measure.reading`), prática à direita (editor + resultado), lado a lado e com altura da tela | empilha: explicação → prática; o controle da escuta fica fixo na base (ver 13.4) |
+| **Prática em tela cheia** | Editar o site pessoal livremente                                                                                                                | resultado vira uma aba ao lado do editor ("Código" · "Resultado")                |
 
 No celular, o produto **prioriza ler e ouvir**; a prática funciona, mas a experiência é pensada para notebook (briefing, seção 11.4).
 
@@ -438,15 +438,15 @@ As variantes `secondary` e `link` do shadcn existem no código, mas não fazem p
 **ListenControls** — controle da escuta
 
 - **Para que serve:** permitir ouvir a explicação na voz da Luv, no ritmo da aluna.
-- **Quando usar:** no topo de toda explicação; fixo (`z.sticky`) enquanto a explicação estiver na tela; no celular, fixo na base.
-- **Anatomia:** avatar da Luv (`icon.lg`, estado "aprender") · botão Ouvir/Pausar · Voltar trecho · Repetir trecho · seletor de velocidade (0,75× · 1× · 1,25× · 1,5×) · indicador "Trecho 3 de 9".
+- **Quando usar:** no topo de toda explicação; fixo (`z.sticky`) enquanto a explicação estiver na tela; no celular, fixo na base (ver 13.4).
+- **Anatomia:** avatar da Luv (`icon.lg`, estado "aprender"; ver 13.4) · botão Ouvir/Pausar · Voltar trecho · Repetir trecho · seletor de velocidade (0,75× · 1× · 1,25× · 1,5×) · indicador "Trecho 3 de 9".
 
 | Estado       | Aparência / comportamento                                                                              |
 | ------------ | ------------------------------------------------------------------------------------------------------ |
 | parado       | botão principal "Ouvir explicação" (variante `primary`)                                                |
-| tocando      | botão vira "Pausar"; avatar faz `luv-bob` uma vez por trecho (sem movimento reduzido)                  |
+| tocando      | botão vira "Pausar"; avatar faz `luv-bob` uma vez por trecho (sem movimento reduzido; ver 13.4)        |
 | pausado      | botão "Continuar"; trecho atual continua destacado                                                     |
-| fim          | botão "Ouvir de novo"; foco vai para o primeiro passo da prática                                       |
+| fim          | botão "Ouvir de novo"; foco vai para a seção Prática                                                   |
 | indisponível | controles desabilitados + mensagem "A voz não está disponível neste aparelho. O texto está todo aqui." |
 
 - **Regras:** nunca começa sozinho. A velocidade escolhida é lembrada. Atalhos de teclado: `Espaço` (ouvir/pausar quando o controle está em foco), `←` / `→` (trecho anterior/próximo).
@@ -456,7 +456,7 @@ As variantes `secondary` e `link` do shadcn existem no código, mas não fazem p
 
 - **Para que serve:** mostrar qual trecho da explicação está sendo lido.
 - **Anatomia:** parágrafos em `type.body.lg`, divididos em trechos (uma frase cada).
-- **Trecho em leitura:** fundo `color.bg.highlight` + sublinhado de 2px `color.action.primary` — dois sinais, não só cor. `radius.sm`, padding horizontal de 2px.
+- **Trecho em leitura:** fundo `color.bg.highlight` + sublinhado de 2px `color.action.primary` — dois sinais, não só cor. (o `::highlight` não aceita raio nem padding).
 - **Comportamento:** a página rola para manter o trecho visível, mas só se ele sair da tela (sem pular a cada frase). Clicar num trecho começa a leitura a partir dele.
 - **Termos técnicos:** na primeira aparição, em `type.code`; a explicação do termo vem na frase seguinte, nunca em tooltip.
 
@@ -643,7 +643,7 @@ Não há aplicativo nativo previsto.
 | Toast no topo no celular (DS 8.2)                   | código             | o viewport do toast do shadcn fica embaixo em todas as larguras                                                                                                                                                                                                | ajustar o `ToastViewport`                                                                                                                                       | Fase 1  |
 | Controles da escuta no celular                      | código             | ficam fixos no topo (abaixo da barra da aula), não na base                                                                                                                                                                                                     | avaliar com a aluna no celular                                                                                                                                  | Fase 2  |
 | Avatar da Luv nos controles da escuta               | código             | os controles não mostram a Luv (a página já tem a Luv do objetivo — uma Luv por tela)                                                                                                                                                                          | manter                                                                                                                                                          | —       |
-| Clique no texto para ouvir dali                     | código             | só pula de trecho com a escuta em andamento; parada, um clique não toca nada (nada toca sozinho)                                                                                                                                                               | manter                                                                                                                                                          | —       |
+| Clique no texto para ouvir dali                     | código             | funciona com a escuta tocando ou pausada (pausada, pula e retoma dali), nunca parada (nada toca sozinho); é ignorado durante a seleção de texto e em links                                                                                                     | manter                                                                                                                                                          | —       |
 | Destaque do trecho sem a CSS Custom Highlight API   | código             | navegadores sem a API leem normalmente, sem destaque                                                                                                                                                                                                           | aceitar (API presente em Chrome, Safari e Firefox atuais)                                                                                                       | —       |
 | Velocidade guardada à parte                         | código             | fica em `localStorage` (`codeluv:velocidade`), fora do progresso                                                                                                                                                                                               | juntar ao progresso no Plano 4                                                                                                                                  | Plano 4 |
 | Espaço para ouvir/pausar e dica de teclado (DS 8.2) | código             | o Espaço só aciona o botão em foco (nativo); não há dica `kbd` dos atalhos ← →                                                                                                                                                                                 | manter o comportamento nativo; avaliar a dica com a aluna                                                                                                       | Fase 2  |
@@ -792,6 +792,7 @@ Não há aplicativo nativo previsto.
 | 2026-10-09 | 0.3.0 — Plano 2 entregue: CodeEditor, ResultPreview, CheckList, HintPanel, Toast e lista de aulas prontos                                                                               | Claudio Soares |
 | 2026-10-09 | 0.3.1 — revisão final do Plano 2: uma Luv por tela na prática, avisos com 6s, divergências atualizadas                                                                                  | Claudio Soares |
 | 2026-10-09 | 0.4.0 — Plano 3 entregue: escuta com ListenControls e destaque do trecho (ReadAlongText)                                                                                                | Claudio Soares |
+| 2026-10-09 | 0.4.1 — revisão final do Plano 3: rolagem respeita os controles fixos, foco na seção Prática, alto contraste no destaque                                                                | Claudio Soares |
 
 ---
 

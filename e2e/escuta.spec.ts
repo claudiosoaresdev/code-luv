@@ -91,7 +91,7 @@ test('a Luv lê a explicação inteira e o foco vai para a prática', async ({
   // O bloco de código do exemplo não é lido.
   expect(falas.some((f) => f.includes('Olá, eu sou a Luv'))).toBe(false)
 
-  await expect(page.locator('#pratica')).toBeFocused()
+  await expect(page.getByRole('region', { name: 'Prática' })).toBeFocused()
 })
 
 test('pausar, continuar e pular trechos', async ({ page }) => {

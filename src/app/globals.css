@@ -232,3 +232,10 @@
   text-decoration: underline 2px var(--primary);
   text-underline-offset: 4px;
 }
+
+@media (forced-colors: active) {
+  ::highlight(leitura) {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

@@ -18,6 +18,8 @@ import { ResultPreview } from './result-preview'
 type PracticeProps = {
   aula: Aula
   proxima?: { slug: string; titulo: string }
+  /** id da seção, alvo do foco ao fim da escuta. */
+  id?: string
 }
 
 function falaDaLuv(faltam: number) {
@@ -31,7 +33,7 @@ function falaDaLuv(faltam: number) {
  * Prática da aula (DS 9 — Estrutura da aula, Conferência e pistas,
  * Conclusão de aula, Desfazer). Nada é salvo ainda (Plano 4).
  */
-export function Practice({ aula, proxima }: PracticeProps) {
+export function Practice({ aula, proxima, id }: PracticeProps) {
   const { pratica } = aula
   const tituloId = useId()
   const ajudaId = useId()
@@ -78,7 +80,12 @@ export function Practice({ aula, proxima }: PracticeProps) {
   }
 
   return (
-    <section aria-labelledby={tituloId} className="flex flex-col gap-5">
+    <section
+      id={id}
+      tabIndex={-1}
+      aria-labelledby={tituloId}
+      className="flex scroll-mt-40 flex-col gap-5 rounded-xl focus:outline-3 focus:outline-offset-4 focus:outline-ring"
+    >
       <h2 id={tituloId} className="font-display text-2xl font-semibold">
         Prática
       </h2>

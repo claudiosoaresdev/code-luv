@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { dividirEmTrechos, type Trecho } from '@/lib/escuta/trechos'
 
@@ -43,14 +43,35 @@ export function Escuta({ children, focoAoTerminar }: EscutaProps) {
     const trecho = trechos[atual]
     if ((estado === 'tocando' || estado === 'pausado') && trecho) {
       CSS.highlights.set('leitura', new Highlight(trecho.range))
-      trecho.range.startContainer.parentElement?.scrollIntoView({
-        block: 'nearest',
-      })
     } else {
       CSS.highlights.delete('leitura')
     }
     return () => {
       CSS.highlights.delete('leitura')
+    }
+  }, [estado, atual, trechos])
+
+  // Rolagem só quando o trecho muda com a escuta tocando (pausar não rola) e
+  // sem animação: texto lido nunca é animado (DS 7).
+  const controlesRef = useRef<HTMLDivElement>(null)
+  const ultimoRolado = useRef<number | null>(null)
+  useEffect(() => {
+    if (estado !== 'tocando') {
+      if (estado !== 'pausado') ultimoRolado.current = null
+      return
+    }
+    if (ultimoRolado.current === atual) return
+    ultimoRolado.current = atual
+    const trecho = trechos[atual]
+    const controles = controlesRef.current
+    if (!trecho || !controles) return
+    const caixa = trecho.range.getBoundingClientRect()
+    const topoLivre = controles.getBoundingClientRect().bottom + 8
+    if (caixa.top < topoLivre || caixa.bottom > window.innerHeight - 16) {
+      window.scrollBy({
+        top: caixa.top - topoLivre - window.innerHeight * 0.2,
+        behavior: 'auto',
+      })
     }
   }, [estado, atual, trechos])
 
@@ -60,10 +81,13 @@ export function Escuta({ children, focoAoTerminar }: EscutaProps) {
     }
   }, [estado, focoAoTerminar])
 
-  // Clicar numa frase pula para ela — só com a escuta em andamento, para um
-  // clique de seleção nunca disparar som (briefing: nada toca sozinho).
+  // Clicar numa frase pula para ela — só com a escuta em andamento (tocando ou
+  // pausada; pausada, retoma dali), para um clique de seleção nunca disparar
+  // som (briefing: nada toca sozinho). Seleção de texto e links são ignorados.
   function pularParaOClique(evento: React.MouseEvent) {
     if (estado !== 'tocando' && estado !== 'pausado') return
+    if (window.getSelection()?.isCollapsed === false) return
+    if ((evento.target as Element).closest('a')) return
     const ponto = pontoNoTexto(evento.clientX, evento.clientY)
     if (!ponto) return
     const i = trechos.findIndex((t) =>
@@ -73,8 +97,12 @@ export function Escuta({ children, focoAoTerminar }: EscutaProps) {
   }
 
   return (
-    <section aria-label="Explicação" className="flex flex-col gap-5">
-      <div className="sticky top-[calc(4rem+2px)] z-10 bg-background py-2">
+    <section className="flex flex-col gap-5">
+      {/* top: altura da LessonHeader (h-16 + border-b-2) — ver lesson-header.tsx */}
+      <div
+        ref={controlesRef}
+        className="sticky top-[calc(4rem+2px)] z-10 bg-background py-2"
+      >
         <ListenControls
           estado={estado}
           atual={atual}

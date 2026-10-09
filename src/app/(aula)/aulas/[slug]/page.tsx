@@ -75,16 +75,15 @@ async function AulaConteudo({
           <LuvSays state="aprender" announce={false}>
             {aula.objetivo}
           </LuvSays>
-          <Escuta focoAoTerminar="pratica">
+          <Escuta key={slug} focoAoTerminar="pratica">
             <Explicacao />
           </Escuta>
         </article>
-        <div id="pratica" tabIndex={-1} className="outline-none">
-          <Practice
-            aula={aula}
-            proxima={proxima && { slug: proxima.slug, titulo: proxima.titulo }}
-          />
-        </div>
+        <Practice
+          id="pratica"
+          aula={aula}
+          proxima={proxima && { slug: proxima.slug, titulo: proxima.titulo }}
+        />
       </main>
     </>
   )

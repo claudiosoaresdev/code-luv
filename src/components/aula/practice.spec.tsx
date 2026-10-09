@@ -35,6 +35,14 @@ const escrever = (codigo: string) =>
 describe('Practice', () => {
   beforeEach(() => add.mockClear())
 
+  it('aceita um id e pode receber foco programático na seção', () => {
+    render(<Practice aula={aula} id="pratica" />)
+
+    const secao = screen.getByRole('region', { name: 'Prática' })
+    expect(secao).toHaveAttribute('id', 'pratica')
+    expect(secao).toHaveAttribute('tabindex', '-1')
+  })
+
   it('começa com o código inicial e sem poder concluir', () => {
     render(<Practice aula={aula} />)
 
