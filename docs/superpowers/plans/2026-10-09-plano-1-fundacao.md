@@ -541,7 +541,7 @@ export function LuvSays({
           alt=""
           width={240}
           height={240}
-          priority
+          loading="eager"
           className="size-48 rounded-full border-2 border-border shadow-sticker-lg md:size-60"
         />
         {bubble}
