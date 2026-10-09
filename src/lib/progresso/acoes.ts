@@ -1,4 +1,4 @@
-import type { Progresso, ProgressoAula } from './modelo'
+import { metaValida, type Progresso, type ProgressoAula } from './modelo'
 
 const AULA_NOVA: ProgressoAula = { conferencias: 0 }
 
@@ -66,4 +66,9 @@ export function definirNome(p: Progresso, nome: string): Progresso {
 
 export function pularNome(p: Progresso): Progresso {
   return { ...p, nomePulado: true }
+}
+
+/** Meta da semana (1 a 7 dias). Valor fora disso não muda nada. */
+export function definirMeta(p: Progresso, meta: number): Progresso {
+  return metaValida(meta) ? { ...p, metaSemanal: meta } : p
 }

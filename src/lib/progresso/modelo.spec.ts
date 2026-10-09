@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { normalizar, PROGRESSO_VAZIO } from './modelo'
+import {
+  META_PADRAO,
+  metaDe,
+  metaValida,
+  normalizar,
+  PROGRESSO_VAZIO,
+} from './modelo'
 
 describe('normalizar', () => {
   it('aceita um progresso válido', () => {
@@ -91,5 +97,31 @@ describe('normalizar', () => {
     })
     expect(r?.aulas.a.codigoConcluido).toBe('<p>x</p>')
     expect(r?.aulas.b.codigoConcluido).toBeUndefined()
+  })
+})
+
+describe('meta da semana', () => {
+  it('aceita só inteiros de 1 a 7', () => {
+    expect([1, 3, 7].every(metaValida)).toBe(true)
+    expect([0, 8, 2.5, '3', null, undefined, Number.NaN].some(metaValida)).toBe(
+      false,
+    )
+  })
+
+  it('normalizar guarda a meta válida e descarta a inválida', () => {
+    expect(
+      normalizar({ versao: 1, aulas: {}, metaSemanal: 5 })?.metaSemanal,
+    ).toBe(5)
+    for (const ruim of [0, 8, 2.5, '3']) {
+      expect(
+        normalizar({ versao: 1, aulas: {}, metaSemanal: ruim })?.metaSemanal,
+      ).toBeUndefined()
+    }
+  })
+
+  it('sem meta guardada, vale 3', () => {
+    expect(META_PADRAO).toBe(3)
+    expect(metaDe(PROGRESSO_VAZIO)).toBe(3)
+    expect(metaDe({ ...PROGRESSO_VAZIO, metaSemanal: 6 })).toBe(6)
   })
 })

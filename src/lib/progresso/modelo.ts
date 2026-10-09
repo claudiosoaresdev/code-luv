@@ -28,6 +28,8 @@ export type Progresso = {
   /** Datas YYYY-MM-DD (horário local) em que ela estudou. */
   diasEstudados: string[]
   velocidade?: Velocidade
+  /** Dias por semana que ela quer estudar (1–7). Ausente = META_PADRAO. */
+  metaSemanal?: number
 }
 
 export const PROGRESSO_VAZIO: Progresso = {
@@ -35,6 +37,19 @@ export const PROGRESSO_VAZIO: Progresso = {
   aulas: {},
   conquistas: {},
   diasEstudados: [],
+}
+
+/** A métrica do briefing (seção 10): três sessões por semana. */
+export const META_PADRAO = 3
+
+export function metaValida(valor: unknown): valor is number {
+  return (
+    Number.isInteger(valor) && (valor as number) >= 1 && (valor as number) <= 7
+  )
+}
+
+export function metaDe(p: Progresso) {
+  return p.metaSemanal ?? META_PADRAO
 }
 
 function objeto(valor: unknown): valor is Record<string, unknown> {
@@ -97,6 +112,7 @@ export function normalizar(dado: unknown): Progresso | null {
   }
   if (dado.nomePulado === true) progresso.nomePulado = true
   if (velocidadeValida(dado.velocidade)) progresso.velocidade = dado.velocidade
+  if (metaValida(dado.metaSemanal)) progresso.metaSemanal = dado.metaSemanal
 
   return progresso
 }

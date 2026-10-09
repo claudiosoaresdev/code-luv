@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   concluirAula,
+  definirMeta,
   definirNome,
   hoje,
   pularNome,
@@ -61,5 +62,16 @@ describe('ações do progresso', () => {
     p = concluirAula(p, SLUG, '2026-10-10T20:00:00.000Z', '2026-10-10')
     expect(p.aulas[SLUG].conferenciasAoConcluir).toBe(1)
     expect(p.aulas[SLUG].conferencias).toBe(2)
+  })
+})
+
+describe('definirMeta', () => {
+  it('grava uma meta válida', () => {
+    expect(definirMeta(PROGRESSO_VAZIO, 5).metaSemanal).toBe(5)
+  })
+
+  it('ignora meta fora de 1 a 7', () => {
+    expect(definirMeta(PROGRESSO_VAZIO, 0)).toBe(PROGRESSO_VAZIO)
+    expect(definirMeta(PROGRESSO_VAZIO, 9)).toBe(PROGRESSO_VAZIO)
   })
 })
