@@ -1,13 +1,27 @@
 import { describe, expect, it } from 'vitest'
 
-import { runChecks } from '@/lib/checks/run-checks'
+import { conferir } from '@/lib/checks/conferir'
 
+import { MODULOS } from '../modulos'
 import { EXPLICACOES } from './explicacoes'
 import { AULAS, getAula, proximaAula } from './index'
 
 describe('registro de aulas', () => {
-  it('tem as aulas em ordem, começando em 1, sem buracos', () => {
-    expect(AULAS.map((a) => a.ordem)).toEqual(AULAS.map((_, i) => i + 1))
+  it('em cada módulo, as aulas estão em ordem, começando em 1, sem buracos', () => {
+    for (const modulo of MODULOS) {
+      const ordens = AULAS.filter((a) => a.modulo === modulo.id).map(
+        (a) => a.ordem,
+      )
+      expect(ordens).toEqual(ordens.map((_, i) => i + 1))
+    }
+  })
+
+  it('as aulas de um módulo vêm todas antes das do módulo seguinte', () => {
+    const modulos = AULAS.map((a) => a.modulo)
+    const ordemDosModulos = MODULOS.map((m) => m.id).filter((id) =>
+      modulos.includes(id),
+    )
+    expect([...new Set(modulos)]).toEqual(ordemDosModulos)
   })
 
   it('não repete slugs', () => {
@@ -33,18 +47,12 @@ describe('registro de aulas', () => {
 
   describe.each(AULAS)('aula $ordem — $titulo', (aula) => {
     it('a solução passa em toda a conferência', () => {
-      const resultados = runChecks(
-        aula.pratica.solucao,
-        aula.pratica.conferencia,
-      )
+      const resultados = conferir(aula, aula.pratica.solucao)
       expect(resultados.filter((r) => !r.ok)).toEqual([])
     })
 
     it('o código inicial ainda não passa (a aula tem o que ensinar)', () => {
-      const resultados = runChecks(
-        aula.pratica.inicial,
-        aula.pratica.conferencia,
-      )
+      const resultados = conferir(aula, aula.pratica.inicial)
       expect(resultados.some((r) => !r.ok)).toBe(true)
     })
 

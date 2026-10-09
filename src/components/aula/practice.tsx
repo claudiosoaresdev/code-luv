@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { AULAS } from '@/content/aulas'
 import type { Aula } from '@/content/aulas/types'
-import { runChecks } from '@/lib/checks/run-checks'
+import { conferir as conferirAula } from '@/lib/checks/conferir'
 import type { CheckResult } from '@/lib/checks/types'
 import {
   concluirAula,
@@ -72,7 +72,7 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
   }
 
   function conferir() {
-    const novos = runChecks(codigo, pratica.conferencia)
+    const novos = conferirAula(aula, codigo)
     setResultados(novos)
     atualizarProgresso((p) => registrarConferencia(p, aula.slug, hoje()))
     if (novos.some((r) => !r.ok)) setMostrarPistas(true)
