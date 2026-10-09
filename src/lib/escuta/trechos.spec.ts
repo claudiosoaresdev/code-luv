@@ -57,4 +57,28 @@ describe('dividirEmTrechos', () => {
       'Segundo item.',
     ])
   })
+
+  it('não corta a frase em ponto de arquivo ou de versão', () => {
+    const container = montar(
+      '<p>Salve como index.html e abra. Use a versão 2.0 agora!</p>',
+    )
+    const trechos = dividirEmTrechos(container)
+
+    expect(trechos.map((t) => t.texto)).toEqual([
+      'Salve como index.html e abra.',
+      'Use a versão 2.0 agora!',
+    ])
+    for (const trecho of trechos) {
+      expect(trecho.range.toString()).toBe(trecho.texto)
+    }
+  })
+
+  it('lê o texto próprio de itens com listas aninhadas', () => {
+    const container = montar('<ul><li>Pai.<ul><li>Filho.</li></ul></li></ul>')
+
+    expect(dividirEmTrechos(container).map((t) => t.texto)).toEqual([
+      'Pai.',
+      'Filho.',
+    ])
+  })
 })

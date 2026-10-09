@@ -4,8 +4,10 @@
  */
 export function paraFala(texto: string) {
   return texto
-    .replace(/<\/(\w+)>/g, ' tag de fechamento $1 ')
-    .replace(/<(\w+)>/g, ' tag $1 ')
+    .replace(/<!--[\s\S]*?-->/g, ' comentário ')
+    .replace(/<!doctype\s+html\s*>/gi, ' doctype html ')
+    .replace(/<\/\s*([a-z][\w-]*)\s*>/gi, ' tag de fechamento $1 ')
+    .replace(/<([a-z][\w-]*)(?:\s[^<>]*)?\/?>/gi, ' tag $1 ')
     .replace(/\s+([,.!?:;])/g, '$1')
     .replace(/\s{2,}/g, ' ')
     .trim()

@@ -2,12 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   assinarVelocidade,
+  esquecerVelocidadeEmMemoria,
   lerVelocidade,
   salvarVelocidade,
 } from './velocidade'
 
 describe('velocidade', () => {
-  beforeEach(() => localStorage.clear())
+  beforeEach(() => {
+    localStorage.clear()
+    esquecerVelocidadeEmMemoria()
+  })
   afterEach(() => vi.restoreAllMocks())
 
   it('começa em 1×', () => {
@@ -33,7 +37,7 @@ describe('velocidade', () => {
     })
 
     expect(() => salvarVelocidade(1.5)).not.toThrow()
-    expect(lerVelocidade()).toBe(1)
+    expect(lerVelocidade()).toBe(1.5)
   })
 
   it('avisa quem assinou quando a velocidade muda', () => {

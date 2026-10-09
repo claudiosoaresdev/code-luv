@@ -6,13 +6,25 @@ export type Trecho = {
 }
 
 const BLOCOS = 'h2, h3, p, li'
-/** Uma frase: tudo até . ! ? … (com aspas/parênteses de fechamento), ou até o fim. */
-const FRASE = /[^.!?…]+(?:[.!?…]+["”'»)]*|$)/g
+const CONTENEDORES = 'h2, h3, p, li, ul, ol'
+/**
+ * Uma frase: tudo até . ! ? … (com aspas/parênteses de fechamento), ou até o fim.
+ * Pontuação colada na letra seguinte (index.html, 2.0) não encerra a frase.
+ */
+const FRASE = /(?:[^.!?…]|[.!?…](?=[^\s"”'»).!?…]))+(?:[.!?…]+["”'»)]*|$)/g
 
+/** Só os textos cujo bloco mais próximo é este (sem os de blocos aninhados nem de <pre>). */
 function nosDeTexto(elemento: Element) {
   const caminhante = elemento.ownerDocument.createTreeWalker(
     elemento,
     NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: (no) =>
+        no.parentElement?.closest(CONTENEDORES) === elemento &&
+        !no.parentElement.closest('pre')
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_REJECT,
+    },
   )
   const nos: Text[] = []
   while (caminhante.nextNode()) nos.push(caminhante.currentNode as Text)
@@ -38,7 +50,7 @@ function posicao(nos: Text[], deslocamento: number, ehFim: boolean) {
  */
 export function dividirEmTrechos(container: Element): Trecho[] {
   const blocos = [...container.querySelectorAll(BLOCOS)].filter(
-    (bloco) => !bloco.closest('pre') && !bloco.querySelector(BLOCOS),
+    (bloco) => !bloco.closest('pre'),
   )
   const trechos: Trecho[] = []
 

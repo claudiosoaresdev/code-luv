@@ -8,17 +8,30 @@ function valida(valor: number): valor is Velocidade {
   return (VELOCIDADES as readonly number[]).includes(valor)
 }
 
-/** Velocidade lembrada no aparelho (HU-03); 1× se não houver ou não der para ler. */
+/** Escolha desta página, para valer mesmo quando o armazenamento falha. */
+let memoria: Velocidade | undefined
+
+/** Só para testes: esquece a escolha guardada em memória. */
+export function esquecerVelocidadeEmMemoria() {
+  memoria = undefined
+}
+
+/**
+ * Velocidade lembrada no aparelho (HU-03). Se o armazenamento não der para ler,
+ * vale a escolha feita nesta página; sem nenhuma, 1×.
+ */
 export function lerVelocidade(): Velocidade {
   try {
     const valor = Number(localStorage.getItem(CHAVE))
-    return valida(valor) ? valor : 1
+    if (valida(valor)) return valor
   } catch {
-    return 1
+    // Armazenamento indisponível: cai para a memória.
   }
+  return memoria ?? 1
 }
 
 export function salvarVelocidade(valor: Velocidade) {
+  memoria = valor
   try {
     localStorage.setItem(CHAVE, String(valor))
   } catch {
