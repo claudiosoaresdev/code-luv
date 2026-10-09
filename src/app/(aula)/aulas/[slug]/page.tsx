@@ -23,7 +23,7 @@ export async function generateMetadata({
 }
 
 const MAIN_CLASS =
-  'mx-auto grid w-full max-w-6xl flex-1 grid-cols-[minmax(0,1fr)] items-start gap-12 px-4 py-10 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,1fr)] xl:grid-cols-[minmax(0,68ch)_minmax(0,1fr)]'
+  'mx-auto grid w-full max-w-6xl flex-1 grid-cols-[minmax(0,1fr)] items-start gap-12 px-4 py-10 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,1fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]'
 
 // Os params são dados da URL: ficam atrás do Suspense para o resto da página
 // entrar no App Shell (adopting-partial-prefetching.md).
