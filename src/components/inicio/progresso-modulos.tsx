@@ -43,7 +43,7 @@ function Anel({
           r={RAIO}
           fill="none"
           strokeWidth="8"
-          className="stroke-muted"
+          className="stroke-border/40"
         />
         {valor > 0 && (
           <circle
@@ -96,13 +96,17 @@ export function ProgressoModulos({
         ))}
         <li className="flex flex-col items-center gap-2 text-muted-foreground">
           <span
+            aria-hidden
             className={cn(
               'grid size-20 place-items-center rounded-full border-2 border-dashed border-muted-foreground/60 text-sm',
             )}
           >
             em breve
           </span>
-          <span className="font-medium">JavaScript</span>
+          <span aria-hidden className="font-medium">
+            JavaScript
+          </span>
+          <span className="sr-only">JavaScript, em breve</span>
         </li>
       </ul>
     </section>

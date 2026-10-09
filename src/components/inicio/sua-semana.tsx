@@ -46,7 +46,7 @@ export function SuaSemana({
                 'grid aspect-square w-full max-w-12 place-items-center rounded-xl border-2',
                 dia.estudou
                   ? 'border-line-strong bg-primary text-primary-foreground shadow-sticker'
-                  : 'border-muted bg-muted',
+                  : 'border-border/50 bg-muted',
                 dia.hoje &&
                   'outline-2 outline-offset-2 outline-ring outline-dashed',
               )}

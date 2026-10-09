@@ -23,20 +23,28 @@ export function VitrineConquistas({ selos, proxima }: VitrineConquistasProps) {
       </h3>
       <ul className="mt-4 flex flex-wrap gap-3">
         {selos.map((selo) => (
-          <li
-            key={selo.id}
-            className={cn(
-              'grid size-14 place-items-center rounded-xl border-2',
-              selo.ganha
-                ? 'border-chart-5 bg-muted text-primary'
-                : 'border-dashed border-muted-foreground/60 text-muted-foreground',
-            )}
-          >
-            {selo.ganha ? (
-              <HeartIcon aria-hidden className="size-6 fill-current" />
-            ) : (
-              <LockIcon aria-hidden className="size-5" />
-            )}
+          <li key={selo.id} className="flex flex-col items-center gap-1">
+            <span
+              aria-hidden
+              className={cn(
+                'grid size-14 place-items-center rounded-xl border-2',
+                selo.ganha
+                  ? 'border-chart-5 bg-muted text-primary'
+                  : 'border-dashed border-muted-foreground/60 text-muted-foreground',
+              )}
+            >
+              {selo.ganha ? (
+                <HeartIcon className="size-6 fill-current" />
+              ) : (
+                <LockIcon className="size-5" />
+              )}
+            </span>
+            <span
+              aria-hidden
+              className="max-w-24 text-center text-sm text-muted-foreground"
+            >
+              {selo.titulo}
+            </span>
             <span className="sr-only">
               {selo.ganha
                 ? `${selo.titulo}, ganha`

@@ -42,6 +42,9 @@ describe('ContinuarCard', () => {
     render(<ContinuarCard ultima={{ titulo: 'Pequenos movimentos' }} />)
 
     expect(
+      screen.getByRole('heading', { level: 2, name: 'Tudo em dia' }),
+    ).toBeInTheDocument()
+    expect(
       screen.getByText(/Você concluiu todas as aulas disponíveis por enquanto/),
     ).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Ver meu site' })).toHaveAttribute(

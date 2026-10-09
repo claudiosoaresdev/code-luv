@@ -21,7 +21,13 @@ export function ContinuarCard({ proxima, ultima }: ContinuarCardProps) {
 
   if (!proxima) {
     return (
-      <div className={cn(CARTAO, 'flex flex-col gap-3')}>
+      <section
+        aria-labelledby={tituloId}
+        className={cn(CARTAO, 'flex flex-col gap-3')}
+      >
+        <h2 id={tituloId} className={TITULO_BLOCO}>
+          Tudo em dia
+        </h2>
         <p className="text-lg">
           Você concluiu todas as aulas disponíveis por enquanto. Que tal olhar o
           seu site?
@@ -32,7 +38,7 @@ export function ContinuarCard({ proxima, ultima }: ContinuarCardProps) {
         >
           Ver meu site
         </Link>
-      </div>
+      </section>
     )
   }
 

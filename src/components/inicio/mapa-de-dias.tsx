@@ -55,7 +55,14 @@ export function MapaDeDias({
               }
               className={cn(
                 'size-3.5 rounded-[3px]',
-                celula.futuro ? 'bg-transparent' : COR[celula.nivel],
+                celula.futuro
+                  ? 'bg-transparent'
+                  : cn(
+                      COR[celula.nivel],
+                      celula.nivel === 'nada' && 'border border-border/60',
+                      celula.nivel === 'concluiu' &&
+                        'ring-2 ring-line-strong ring-inset',
+                    ),
               )}
             />
           ))}
@@ -69,7 +76,8 @@ export function MapaDeDias({
               className={cn(
                 'size-3.5 rounded-[3px]',
                 COR[nivel],
-                nivel === 'nada' && 'border border-border',
+                nivel === 'nada' && 'border border-border/60',
+                nivel === 'concluiu' && 'ring-2 ring-line-strong ring-inset',
               )}
             />
             {NOME[nivel]}
