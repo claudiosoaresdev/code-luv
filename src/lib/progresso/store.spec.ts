@@ -1,0 +1,87 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { PROGRESSO_VAZIO } from './modelo'
+import {
+  apagarProgresso,
+  assinarProgresso,
+  atualizarProgresso,
+  esquecerProgressoEmMemoria,
+  exportarProgresso,
+  importarProgresso,
+  obterEstado,
+} from './store'
+
+describe('store do progresso', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    esquecerProgressoEmMemoria()
+  })
+  afterEach(() => vi.restoreAllMocks())
+
+  it('começa vazio e sem perda', () => {
+    expect(obterEstado()).toEqual({
+      progresso: PROGRESSO_VAZIO,
+      perdido: false,
+    })
+  })
+
+  it('grava, lê de volta e devolve o mesmo objeto enquanto nada muda', () => {
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+
+    const primeiro = obterEstado()
+    expect(primeiro.progresso.nome).toBe('Ana')
+    expect(JSON.parse(localStorage.getItem('codeluv:progresso')!).nome).toBe(
+      'Ana',
+    )
+    // useSyncExternalStore exige o mesmo objeto se nada mudou.
+    expect(obterEstado()).toBe(primeiro)
+  })
+
+  it('progresso corrompido vira vazio, marcado como perdido', () => {
+    localStorage.setItem('codeluv:progresso', '{isto não é json')
+    expect(obterEstado()).toEqual({ progresso: PROGRESSO_VAZIO, perdido: true })
+
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    expect(obterEstado().perdido).toBe(false)
+  })
+
+  it('sem armazenamento, segue em memória', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('bloqueado')
+    })
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('bloqueado')
+    })
+
+    expect(() =>
+      atualizarProgresso((p) => ({ ...p, nome: 'Ana' })),
+    ).not.toThrow()
+    expect(obterEstado().progresso.nome).toBe('Ana')
+  })
+
+  it('exporta e importa uma cópia; recusa arquivo que não é cópia', () => {
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    const copia = exportarProgresso()
+
+    apagarProgresso()
+    expect(obterEstado().progresso).toEqual(PROGRESSO_VAZIO)
+
+    expect(importarProgresso('{"qualquer": true}')).toBe(false)
+    expect(importarProgresso('não é json')).toBe(false)
+    expect(importarProgresso(copia)).toBe(true)
+    expect(obterEstado().progresso.nome).toBe('Ana')
+  })
+
+  it('avisa quem assinou a cada mudança', () => {
+    const aviso = vi.fn()
+    const cancelar = assinarProgresso(aviso)
+
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    apagarProgresso()
+    expect(aviso).toHaveBeenCalledTimes(2)
+
+    cancelar()
+    atualizarProgresso((p) => ({ ...p, nome: 'Bia' }))
+    expect(aviso).toHaveBeenCalledTimes(2)
+  })
+})
