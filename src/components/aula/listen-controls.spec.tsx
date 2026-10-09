@@ -36,7 +36,7 @@ describe('ListenControls', () => {
     expect(acoes.onOuvir).toHaveBeenCalled()
     expect(
       screen.getByRole('button', { name: 'Próximo trecho' }),
-    ).toBeDisabled()
+    ).toHaveAttribute('aria-disabled', 'true')
     expect(screen.queryByText(/Trecho/)).not.toBeInTheDocument()
   })
 
@@ -75,9 +75,45 @@ describe('ListenControls', () => {
         'A voz não está disponível neste aparelho. O texto está todo aqui.',
       ),
     ).toBeInTheDocument()
+    const botao = screen.getByRole('button', { name: 'Ouvir explicação' })
+    expect(botao).toHaveAttribute('aria-disabled', 'true')
+    expect(botao).toHaveAccessibleDescription(
+      'A voz não está disponível neste aparelho. O texto está todo aqui.',
+    )
+  })
+
+  it('carregando: o botão principal fica desligado', () => {
+    montar('carregando')
     expect(
       screen.getByRole('button', { name: 'Ouvir explicação' }),
-    ).toBeDisabled()
+    ).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('setas são ignoradas quando parado', () => {
+    const acoes = montar('parado')
+    const grupo = screen.getByRole('group', { name: 'Controle da escuta' })
+
+    fireEvent.keyDown(grupo, { key: 'ArrowLeft' })
+    fireEvent.keyDown(grupo, { key: 'ArrowRight' })
+    expect(acoes.onAnterior).not.toHaveBeenCalled()
+    expect(acoes.onProximo).not.toHaveBeenCalled()
+  })
+
+  it('desliga o próximo no último trecho e o anterior no primeiro', () => {
+    montar('tocando', 11)
+    expect(
+      screen.getByRole('button', { name: 'Próximo trecho' }),
+    ).toHaveAttribute('aria-disabled', 'true')
+    expect(
+      screen.getByRole('button', { name: 'Trecho anterior' }),
+    ).not.toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('desliga o anterior no primeiro trecho', () => {
+    montar('tocando', 0)
+    expect(
+      screen.getByRole('button', { name: 'Trecho anterior' }),
+    ).toHaveAttribute('aria-disabled', 'true')
   })
 
   it('setas do teclado voltam e pulam trechos durante a escuta', () => {

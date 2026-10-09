@@ -1,6 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 
 import { paraFala } from '@/lib/escuta/fala'
 import {
@@ -55,6 +61,21 @@ export function useEscuta({
     () => synth !== null,
     () => null,
   )
+  // A lista de vozes costuma chegar depois da primeira renderização.
+  const assinarVozes = useCallback(
+    (aviso: () => void) => {
+      if (!synth) return () => {}
+      synth.addEventListener('voiceschanged', aviso)
+      return () => synth.removeEventListener('voiceschanged', aviso)
+    },
+    [synth],
+  )
+  const totalDeVozes = useSyncExternalStore(
+    assinarVozes,
+    () => (synth ? synth.getVoices().length : 0),
+    () => 0,
+  )
+  const vozPt = escolherVoz(synth?.getVoices() ?? [])
   const velocidade = useSyncExternalStore(
     assinarVelocidade,
     lerVelocidade,
@@ -65,6 +86,8 @@ export function useEscuta({
     atual: 0,
   })
   const geracao = useRef(0)
+  // Guarda a fala atual: o Chrome pode coletá-la antes do evento end.
+  const falaAtual = useRef<SpeechSynthesisUtterance | null>(null)
   const falarRef = useRef<(i: number) => void>(() => {})
 
   function falar(i: number, ritmo: number = velocidade) {
@@ -74,8 +97,7 @@ export function useEscuta({
 
     const fala = criarFala(paraFala(trechos[i]))
     fala.lang = 'pt-BR'
-    const voz = escolherVoz(synth.getVoices())
-    if (voz) fala.voice = voz
+    if (vozPt) fala.voice = vozPt
     fala.rate = ritmo
     fala.onend = () => {
       if (geracao.current !== minha) return
@@ -88,6 +110,7 @@ export function useEscuta({
     }
 
     setTocador({ estado: 'tocando', atual: i })
+    falaAtual.current = fala
     synth.speak(fala)
   }
 
@@ -113,13 +136,23 @@ export function useEscuta({
     setTocador({ estado: 'pausado', atual })
   }
 
+  function proximo() {
+    if (atual >= ultimo) return
+    falar(atual + 1)
+  }
+
   function mudarVelocidade(nova: Velocidade) {
     salvarVelocidade(nova)
     if (estado === 'tocando') falar(atual, nova)
   }
 
+  const semVozEmPortugues = totalDeVozes > 0 && !vozPt
   const estadoVisivel: EstadoEscuta =
-    suportado === null ? 'carregando' : suportado ? estado : 'indisponivel'
+    suportado === null || trechos.length === 0
+      ? 'carregando'
+      : !suportado || semVozEmPortugues
+        ? 'indisponivel'
+        : estado
 
   return {
     estado: estadoVisivel,
@@ -131,7 +164,7 @@ export function useEscuta({
     continuar: () => falar(atual),
     repetir: () => falar(atual),
     anterior: () => falar(Math.max(0, atual - 1)),
-    proximo: () => falar(Math.min(ultimo, atual + 1)),
+    proximo,
     irPara: (i: number) => falar(i),
     mudarVelocidade,
   }

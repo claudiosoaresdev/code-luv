@@ -1,5 +1,7 @@
 'use client'
 
+import { useId } from 'react'
+
 import {
   PauseIcon,
   PlayIcon,
@@ -43,6 +45,7 @@ type ListenControlsProps = {
  */
 export function ListenControls(props: ListenControlsProps) {
   const { estado } = props
+  const idAviso = useId()
   const emAndamento = estado === 'tocando' || estado === 'pausado'
 
   const principal =
@@ -80,7 +83,9 @@ export function ListenControls(props: ListenControlsProps) {
         >
           <Button
             onClick={principal.acao}
+            focusableWhenDisabled
             disabled={estado === 'carregando' || estado === 'indisponivel'}
+            aria-describedby={estado === 'indisponivel' ? idAviso : undefined}
           >
             <principal.Icone data-icon="inline-start" />
             {principal.rotulo}
@@ -89,7 +94,8 @@ export function ListenControls(props: ListenControlsProps) {
             variant="outline"
             size="icon"
             aria-label="Trecho anterior"
-            disabled={!emAndamento}
+            focusableWhenDisabled
+            disabled={!emAndamento || props.atual === 0}
             onClick={props.onAnterior}
           >
             <SkipBackIcon />
@@ -98,6 +104,7 @@ export function ListenControls(props: ListenControlsProps) {
             variant="outline"
             size="icon"
             aria-label="Repetir trecho"
+            focusableWhenDisabled
             disabled={!emAndamento}
             onClick={props.onRepetir}
           >
@@ -107,7 +114,8 @@ export function ListenControls(props: ListenControlsProps) {
             variant="outline"
             size="icon"
             aria-label="Próximo trecho"
-            disabled={!emAndamento}
+            focusableWhenDisabled
+            disabled={!emAndamento || props.atual >= props.total - 1}
             onClick={props.onProximo}
           >
             <SkipForwardIcon />
@@ -141,7 +149,7 @@ export function ListenControls(props: ListenControlsProps) {
           </p>
         )}
         {estado === 'indisponivel' && (
-          <p className="text-sm text-muted-foreground">
+          <p id={idAviso} className="text-sm text-muted-foreground">
             A voz não está disponível neste aparelho. O texto está todo aqui.
           </p>
         )}

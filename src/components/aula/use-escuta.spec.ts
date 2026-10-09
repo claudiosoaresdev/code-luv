@@ -18,25 +18,31 @@ class FalaFalsa {
   }
 }
 
-function criarSynth() {
+function criarSynth(
+  vozes = [
+    { name: 'Luciana', lang: 'pt-BR', localService: true },
+  ] as SpeechSynthesisVoice[],
+) {
   const faladas: FalaFalsa[] = []
   return {
     faladas,
     speak: vi.fn((fala: FalaFalsa) => faladas.push(fala)),
     cancel: vi.fn(),
-    getVoices: () =>
-      [
-        { name: 'Luciana', lang: 'pt-BR', localService: true },
-      ] as SpeechSynthesisVoice[],
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    getVoices: () => vozes,
   }
 }
 
 const TRECHOS = ['Um.', 'A tag <p> abre.', 'Três.']
 
-function montar(synth: ReturnType<typeof criarSynth> | null) {
+function montar(
+  synth: ReturnType<typeof criarSynth> | null,
+  trechos: string[] = TRECHOS,
+) {
   return renderHook(() =>
     useEscuta({
-      trechos: TRECHOS,
+      trechos,
       synth: synth as unknown as SpeechSynthesis | null,
       criarFala: (texto) =>
         new FalaFalsa(texto) as unknown as SpeechSynthesisUtterance,
@@ -145,5 +151,76 @@ describe('useEscuta', () => {
 
     expect(result.current.atual).toBe(0)
     expect(synth.faladas.at(-1)?.text).toBe('Um.')
+  })
+
+  it('erro na fala atual para a escuta', () => {
+    const synth = criarSynth()
+    const { result } = montar(synth)
+
+    act(() => result.current.ouvir())
+    act(() => synth.faladas[0].onerror?.())
+    expect(result.current.estado).toBe('parado')
+  })
+
+  it('erro de uma fala já cancelada não muda o estado', () => {
+    const synth = criarSynth()
+    const { result } = montar(synth)
+
+    act(() => result.current.ouvir())
+    act(() => result.current.pausar())
+    act(() => synth.faladas[0].onerror?.())
+    expect(result.current.estado).toBe('pausado')
+  })
+
+  it('cala a voz ao desmontar', () => {
+    const synth = criarSynth()
+    const { unmount } = montar(synth)
+
+    synth.cancel.mockClear()
+    unmount()
+    expect(synth.cancel).toHaveBeenCalled()
+  })
+
+  it('com vozes só em outro idioma, fica indisponível', () => {
+    const synth = criarSynth([
+      { name: 'Samantha', lang: 'en-US' },
+    ] as SpeechSynthesisVoice[])
+    const { result } = montar(synth)
+
+    expect(result.current.estado).toBe('indisponivel')
+  })
+
+  it('sem lista de vozes ainda, fala em pt-BR sem voz explícita', () => {
+    const synth = criarSynth([])
+    const { result } = montar(synth)
+
+    expect(result.current.estado).toBe('parado')
+    act(() => result.current.ouvir())
+    expect(synth.faladas[0]).toMatchObject({ lang: 'pt-BR', voice: null })
+  })
+
+  it('irPara fala o trecho pedido', () => {
+    const synth = criarSynth()
+    const { result } = montar(synth)
+
+    act(() => result.current.ouvir())
+    act(() => result.current.irPara(2))
+    expect(result.current.atual).toBe(2)
+    expect(synth.faladas.at(-1)?.text).toBe('Três.')
+  })
+
+  it('sem trechos ainda, fica carregando', () => {
+    const { result } = montar(criarSynth(), [])
+    expect(result.current.estado).toBe('carregando')
+  })
+
+  it('próximo no último trecho não relê', () => {
+    const synth = criarSynth()
+    const { result } = montar(synth)
+
+    act(() => result.current.irPara(2))
+    const antes = synth.faladas.length
+    act(() => result.current.proximo())
+    expect(synth.faladas).toHaveLength(antes)
   })
 })
