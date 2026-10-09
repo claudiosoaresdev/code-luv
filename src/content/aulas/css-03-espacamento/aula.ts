@@ -46,10 +46,10 @@ export const aula: AulaCss = {
       },
     ],
     pistas: [
-      'O padding e o border-radius recebem uma medida, como 24px.',
+      'O padding recebe uma medida, como 24px. O border-radius também aceita porcentagem: 50% deixa a imagem redonda.',
       'A borda recebe três valores: grossura, estilo e cor. Assim: form { border: 2px solid purple; }.',
     ],
     solucao:
-      'body {\n  padding: 24px;\n}\n\nimg {\n  border-radius: 16px;\n}\n\nform {\n  border: 2px solid mediumvioletred;\n  padding: 16px;\n}\n',
+      'body {\n  padding: 24px;\n}\n\nimg {\n  border-radius: 50%;\n}\n\nform {\n  border: 2px solid mediumvioletred;\n  padding: 16px;\n}\n',
   },
 }

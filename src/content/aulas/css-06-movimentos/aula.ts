@@ -25,11 +25,7 @@ export const aula: AulaCss = {
       {
         tipo: 'regra',
         seletor: 'a',
-        propriedades: [
-          'transition',
-          'transition-property',
-          'transition-duration',
-        ],
+        propriedades: ['transition', 'transition-duration'],
         descricao: 'A regra do a tem transition',
       },
       {

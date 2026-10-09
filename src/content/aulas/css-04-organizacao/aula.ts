@@ -6,11 +6,11 @@ export const aula: AulaCss = {
   modulo: 'css',
   titulo: 'Organização com flexbox',
   objetivo:
-    'Nesta aula você vai deixar o site no meio da tela e organizar o formulário com flexbox.',
+    'Nesta aula você vai deixar o seu site no meio da tela e organizar o formulário com flexbox.',
   duracaoMin: 20,
   pratica: {
     enunciado: [
-      'Escreva uma regra para body com max-width e margin: 0 auto, para deixar o site no meio da tela.',
+      'Escreva uma regra para body com max-width e margin: 0 auto, para deixar o seu site no meio da tela.',
       'Escreva uma regra para form com display: flex e flex-direction: column, para empilhar os campos.',
       'Na mesma regra do form, coloque gap para separar os campos.',
     ],
@@ -51,9 +51,9 @@ export const aula: AulaCss = {
     ],
     pistas: [
       'Tudo o que é do formulário fica numa regra só: form, as chaves e as três propriedades dentro.',
-      'Fica assim: form { display: flex; flex-direction: column; gap: 12px; }. E o body: body { max-width: 720px; margin: 0 auto; }.',
+      'Fica assim: form { display: flex; flex-direction: column; gap: 12px; }. E o body: body { max-width: 420px; margin: 0 auto; }.',
     ],
     solucao:
-      'body {\n  max-width: 720px;\n  margin: 0 auto;\n}\n\nform {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n',
+      'body {\n  max-width: 420px;\n  margin: 0 auto;\n}\n\nform {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n',
   },
 }
