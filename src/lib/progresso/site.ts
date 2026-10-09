@@ -5,22 +5,52 @@ import type { Progresso } from './modelo'
 const concluida = (p: Progresso, aula: Aula) =>
   Boolean(p.aulas[aula.slug]?.concluidaEm)
 
-/** "Meu site" (HU-07): o código de cada aula concluída, na ordem das aulas. */
-export function montarSite(p: Progresso, aulas: Aula[]) {
-  const feitas = aulas.filter((aula) => concluida(p, aula))
-  return {
-    html: feitas
-      .map((aula) =>
-        (
-          p.aulas[aula.slug]?.codigoConcluido ??
-          p.aulas[aula.slug]?.codigo ??
-          ''
-        ).trim(),
-      )
+/** Código que a aluna está editando agora (resultado da prática de CSS). */
+export type EmEdicao = { slug: string; codigo: string }
+
+/**
+ * "Meu site" (HU-07): o HTML das aulas de HTML concluídas e o CSS das aulas
+ * de CSS concluídas, cada um na ordem das aulas. Com `emEdicao`, aquela aula
+ * entra com o código do editor, mesmo sem estar concluída.
+ */
+export function montarSite(p: Progresso, aulas: Aula[], emEdicao?: EmEdicao) {
+  const codigoDe = (aula: Aula) =>
+    emEdicao && aula.slug === emEdicao.slug
+      ? emEdicao.codigo
+      : (p.aulas[aula.slug]?.codigoConcluido ??
+        p.aulas[aula.slug]?.codigo ??
+        '')
+  const entram = aulas.filter(
+    (aula) => aula.slug === emEdicao?.slug || concluida(p, aula),
+  )
+  const juntar = (modulo: Aula['modulo']) =>
+    entram
+      .filter((aula) => aula.modulo === modulo)
+      .map((aula) => codigoDe(aula).trim())
       .filter(Boolean)
-      .join('\n\n'),
-    partes: feitas.map(({ slug, titulo }) => ({ slug, titulo })),
+      .join('\n\n')
+  return {
+    html: juntar('html'),
+    css: juntar('css'),
+    partes: aulas
+      .filter((aula) => concluida(p, aula))
+      .map(({ slug, titulo }) => ({ slug, titulo })),
   }
+}
+
+/**
+ * O documento do iframe: o CSS num <style> antes do HTML. Sem CSS, é o HTML
+ * como está. `htmlDeExemplo` entra quando a aluna ainda não tem HTML.
+ */
+export function documentoDoSite(
+  site: { html: string; css: string },
+  htmlDeExemplo = '',
+) {
+  const corpo = site.html || htmlDeExemplo
+  if (!site.css) return corpo
+  // "</style" dentro do CSS fecharia a tag; para o CSS, "<\/style" é o mesmo texto.
+  const css = site.css.replace(/<\/style/gi, '<\\/style')
+  return `<style>\n${css}\n</style>\n${corpo}`
 }
 
 export function proximaParaEstudar(p: Progresso, aulas: Aula[]) {

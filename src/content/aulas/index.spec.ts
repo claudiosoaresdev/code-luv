@@ -4,7 +4,7 @@ import { conferir } from '@/lib/checks/conferir'
 
 import { MODULOS } from '../modulos'
 import { EXPLICACOES } from './explicacoes'
-import { AULAS, getAula, proximaAula } from './index'
+import { AULAS, getAula, proximaAula, siteDeExemplo } from './index'
 
 describe('registro de aulas', () => {
   it('em cada módulo, as aulas estão em ordem, começando em 1, sem buracos', () => {
@@ -61,5 +61,14 @@ describe('registro de aulas', () => {
       const descricoes = aula.pratica.conferencia.map((c) => c.descricao)
       expect(new Set(descricoes).size).toBe(descricoes.length)
     })
+  })
+
+  it('o site de exemplo junta as soluções das aulas de HTML', () => {
+    const exemplo = siteDeExemplo()
+    expect(exemplo).toContain('<h1>Olá, eu sou a Ana</h1>')
+    expect(exemplo).toContain('<footer>')
+    for (const aula of AULAS.filter((a) => a.modulo === 'html')) {
+      expect(exemplo).toContain(aula.pratica.solucao.trim())
+    }
   })
 })

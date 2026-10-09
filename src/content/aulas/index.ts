@@ -34,3 +34,13 @@ export function proximaAula(slug: string) {
   const i = AULAS.findIndex((aula) => aula.slug === slug)
   return i === -1 ? undefined : AULAS[i + 1]
 }
+
+/**
+ * Para as aulas de CSS quando a aluna ainda não tem HTML no site: as
+ * soluções das aulas de HTML, juntas, como se fossem o site da Ana.
+ */
+export function siteDeExemplo() {
+  return AULAS.filter((aula) => aula.modulo === 'html')
+    .map((aula) => aula.pratica.solucao.trim())
+    .join('\n\n')
+}
