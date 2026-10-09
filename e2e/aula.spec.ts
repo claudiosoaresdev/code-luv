@@ -46,6 +46,9 @@ test('da lista de aulas até concluir a aula 1', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'Aula concluída!' }),
   ).toBeFocused()
+  await expect(
+    page.getByRole('link', { name: 'Próxima aula: Títulos e destaques' }),
+  ).toHaveAttribute('href', '/aulas/titulos-e-destaques')
   await page.getByRole('link', { name: 'Voltar para as aulas' }).click()
   await expect(page).toHaveURL('/aulas')
 })
@@ -112,3 +115,39 @@ test.describe('no celular', () => {
     expect(semRolagemLateral).toBe(true)
   })
 })
+
+test('a imagem da aula de imagens aparece no resultado', async ({ page }) => {
+  await page.goto('/aulas/imagens')
+  await escrever(
+    page,
+    '<img src="/images/luv/ola.png" alt="A gatinha Luv acenando" width="200">',
+  )
+  const imagem = page
+    .frameLocator('iframe[title="Resultado do seu código"]')
+    .getByRole('img', { name: 'A gatinha Luv acenando' })
+  await expect(imagem).toBeVisible()
+  await expect
+    .poll(() => imagem.evaluate((img: HTMLImageElement) => img.naturalWidth))
+    .toBeGreaterThan(0)
+})
+
+for (const slug of [
+  'titulos-e-destaques',
+  'listas',
+  'links',
+  'imagens',
+  'formularios',
+  'secoes-e-rodape',
+]) {
+  test(`/aulas/${slug} abre sem violação de acessibilidade`, async ({
+    page,
+  }) => {
+    await page.goto(`/aulas/${slug}`)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+      .exclude('iframe[title="Resultado do seu código"]')
+      .analyze()
+    expect(results.violations).toEqual([])
+  })
+}

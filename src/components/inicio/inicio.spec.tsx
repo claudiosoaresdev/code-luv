@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { AULAS } from '@/content/aulas'
 import { concluirAula, definirNome } from '@/lib/progresso/acoes'
 import {
   atualizarProgresso,
@@ -79,16 +80,20 @@ describe('Inicio', () => {
     expect(
       screen.getByRole('link', { name: /Começar a aula/ }),
     ).toHaveAttribute('href', '/aulas/seu-primeiro-html')
-    expect(screen.getByText('0 de 1')).toBeInTheDocument()
+    expect(screen.getByText(`0 de ${AULAS.length}`)).toBeInTheDocument()
   })
 
   it('tudo concluído: celebra e leva ao site', () => {
     atualizarProgresso((p) =>
-      concluirAula(
+      AULAS.reduce(
+        (feito, aula) =>
+          concluirAula(
+            feito,
+            aula.slug,
+            '2026-10-09T20:00:00.000Z',
+            '2026-10-09',
+          ),
         definirNome(p, 'Ana'),
-        'seu-primeiro-html',
-        '2026-10-09T20:00:00.000Z',
-        '2026-10-09',
       ),
     )
     render(<Inicio />)
@@ -100,7 +105,9 @@ describe('Inicio', () => {
       'href',
       '/meu-site',
     )
-    expect(screen.getByText('1 de 1')).toBeInTheDocument()
+    expect(
+      screen.getByText(`${AULAS.length} de ${AULAS.length}`),
+    ).toBeInTheDocument()
   })
 
   it('progresso que não deu para ler: explica sem culpar e aponta a cópia', () => {

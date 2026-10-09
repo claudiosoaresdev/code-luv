@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { runChecks } from '@/lib/checks/run-checks'
 
+import { EXPLICACOES } from './explicacoes'
 import { AULAS, getAula, proximaAula } from './index'
 
 describe('registro de aulas', () => {
@@ -12,6 +13,12 @@ describe('registro de aulas', () => {
   it('não repete slugs', () => {
     const slugs = AULAS.map((a) => a.slug)
     expect(new Set(slugs).size).toBe(slugs.length)
+  })
+
+  it('toda aula tem explicação, e toda explicação tem aula', () => {
+    expect(Object.keys(EXPLICACOES).sort()).toEqual(
+      AULAS.map((a) => a.slug).sort(),
+    )
   })
 
   it('encontra uma aula pelo slug', () => {

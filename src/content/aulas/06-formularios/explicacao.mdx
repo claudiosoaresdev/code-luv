@@ -1,0 +1,30 @@
+## O que é um formulário
+
+Formulário é a parte da página onde a pessoa escreve ou escolhe alguma coisa. Cadastro, busca, mensagem de contato. Tudo isso é formulário.
+
+No HTML, o formulário fica dentro da tag `<form>`. Os campos ficam dentro dela.
+
+## Os campos
+
+O `<input>` é um campo de uma linha só, bom para um nome. Ele não tem tag de fechar.
+
+O `<textarea>` é uma caixa maior, para textos longos. Ele abre e fecha.
+
+O `<button>` é o botão. O texto dentro dele diz o que acontece ao clicar.
+
+## O rótulo de cada campo
+
+Todo campo precisa de um `<label>`, o rótulo que diz o que escrever ali. Sem ele, quem ouve a página não sabe para que serve o campo.
+
+Coloque o campo dentro do `<label>`, logo depois do texto do rótulo.
+
+## Exemplo
+
+```html
+<form>
+  <label>Seu nome <input name="nome" /></label>
+  <button>Mandar um oi</button>
+</form>
+```
+
+Por enquanto o recado não vai para lugar nenhum. Para isso o site precisa de JavaScript, que vem nos próximos módulos.

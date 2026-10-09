@@ -9,4 +9,11 @@ export const EXPLICACOES: Record<
   () => Promise<{ default: MDXContent }>
 > = {
   'seu-primeiro-html': () => import('./01-seu-primeiro-html/explicacao.mdx'),
+  'titulos-e-destaques': () =>
+    import('./02-titulos-e-destaques/explicacao.mdx'),
+  listas: () => import('./03-listas/explicacao.mdx'),
+  links: () => import('./04-links/explicacao.mdx'),
+  imagens: () => import('./05-imagens/explicacao.mdx'),
+  formularios: () => import('./06-formularios/explicacao.mdx'),
+  'secoes-e-rodape': () => import('./07-secoes-e-rodape/explicacao.mdx'),
 }
