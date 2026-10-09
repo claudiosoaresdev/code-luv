@@ -12,6 +12,8 @@ export type ProgressoAula = {
   conferencias: number
   /** ISO 8601; a primeira conclusão. */
   concluidaEm?: string
+  /** Quantas conferências havia quando concluiu pela primeira vez. */
+  conferenciasAoConcluir?: number
 }
 
 export type Progresso = {
@@ -37,14 +39,21 @@ function objeto(valor: unknown): valor is Record<string, unknown> {
   return typeof valor === 'object' && valor !== null && !Array.isArray(valor)
 }
 
+const CHAVES_PROIBIDAS = new Set(['__proto__', 'constructor', 'prototype'])
+
+function contagem(valor: unknown): number | undefined {
+  return typeof valor === 'number' && Number.isFinite(valor) && valor >= 0
+    ? Math.floor(valor)
+    : undefined
+}
+
 function aulaValida(valor: unknown): ProgressoAula | null {
   if (!objeto(valor)) return null
   const aula: ProgressoAula = {
-    conferencias:
-      typeof valor.conferencias === 'number' && valor.conferencias >= 0
-        ? Math.floor(valor.conferencias)
-        : 0,
+    conferencias: contagem(valor.conferencias) ?? 0,
   }
+  const aoConcluir = contagem(valor.conferenciasAoConcluir)
+  if (aoConcluir !== undefined) aula.conferenciasAoConcluir = aoConcluir
   if (typeof valor.codigo === 'string') aula.codigo = valor.codigo
   if (typeof valor.concluidaEm === 'string')
     aula.concluidaEm = valor.concluidaEm
@@ -62,11 +71,13 @@ export function normalizar(dado: unknown): Progresso | null {
   const progresso: Progresso = { ...PROGRESSO_VAZIO, aulas: {}, conquistas: {} }
 
   for (const [slug, valor] of Object.entries(dado.aulas)) {
+    if (CHAVES_PROIBIDAS.has(slug)) continue
     const aula = aulaValida(valor)
     if (aula) progresso.aulas[slug] = aula
   }
   if (objeto(dado.conquistas)) {
     for (const [id, valor] of Object.entries(dado.conquistas)) {
+      if (CHAVES_PROIBIDAS.has(id)) continue
       if (objeto(valor) && typeof valor.em === 'string') {
         progresso.conquistas[id] = { em: valor.em }
       }

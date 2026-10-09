@@ -43,7 +43,24 @@ function avisar() {
   window.dispatchEvent(new Event(EVENTO))
 }
 
+const CHAVE_RECUPERACAO = 'codeluv:progresso:recuperacao'
+
+/** Antes de sobrescrever algo ilegível, guarda o texto original (só a primeira vez). */
+function guardarCopiaDoIlegivel() {
+  const atual = obterEstado()
+  const texto = cache?.texto
+  if (!atual.perdido || typeof texto !== 'string') return
+  try {
+    if (localStorage.getItem(CHAVE_RECUPERACAO) === null) {
+      localStorage.setItem(CHAVE_RECUPERACAO, texto)
+    }
+  } catch {
+    // Sem armazenamento: não há como guardar a cópia.
+  }
+}
+
 function gravar(progresso: Progresso) {
+  guardarCopiaDoIlegivel()
   const texto = JSON.stringify(progresso)
   try {
     localStorage.setItem(CHAVE, texto)
@@ -57,6 +74,7 @@ function gravar(progresso: Progresso) {
 
 /** Snapshot para useSyncExternalStore: estável enquanto nada muda. */
 export function obterEstado(): EstadoProgresso {
+  // Enquanto uma gravação falhou, mudanças de outras abas são ignoradas até uma gravação dar certo.
   if (memoria) return memoria
   const texto = lerTexto()
   if (texto === undefined) return cache?.estado ?? ESTADO_VAZIO

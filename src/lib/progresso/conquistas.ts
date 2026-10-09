@@ -28,7 +28,10 @@ export const CONQUISTAS: Conquista[] = [
     descricao: 'Você concluiu uma aula depois de conferir três vezes ou mais.',
     comoGanhar:
       'Conclua uma aula depois de conferir três vezes ou mais. Errar faz parte!',
-    ganhou: (p) => concluidas(p).some((aula) => aula.conferencias >= 3),
+    ganhou: (p) =>
+      concluidas(p).some(
+        (aula) => (aula.conferenciasAoConcluir ?? aula.conferencias) >= 3,
+      ),
   },
 ]
 

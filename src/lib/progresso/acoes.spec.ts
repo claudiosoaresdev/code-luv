@@ -53,4 +53,13 @@ describe('ações do progresso', () => {
   it('hoje usa a data local no formato AAAA-MM-DD', () => {
     expect(hoje(new Date(2026, 9, 9, 23, 30))).toBe('2026-10-09')
   })
+
+  it('guarda quantas conferências havia ao concluir, só na primeira vez', () => {
+    let p = registrarConferencia(PROGRESSO_VAZIO, SLUG, '2026-10-09')
+    p = concluirAula(p, SLUG, '2026-10-09T20:00:00.000Z', '2026-10-09')
+    p = registrarConferencia(p, SLUG, '2026-10-09')
+    p = concluirAula(p, SLUG, '2026-10-10T20:00:00.000Z', '2026-10-10')
+    expect(p.aulas[SLUG].conferenciasAoConcluir).toBe(1)
+    expect(p.aulas[SLUG].conferencias).toBe(2)
+  })
 })

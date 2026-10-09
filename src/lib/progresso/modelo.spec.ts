@@ -48,4 +48,36 @@ describe('normalizar', () => {
   it('o progresso vazio é ele mesmo válido', () => {
     expect(normalizar(PROGRESSO_VAZIO)).toEqual(PROGRESSO_VAZIO)
   })
+
+  it('aceita conferenciasAoConcluir válido e descarta o inválido', () => {
+    const r = normalizar({
+      versao: 1,
+      aulas: {
+        a: { conferencias: 4, conferenciasAoConcluir: 2 },
+        b: { conferencias: 4, conferenciasAoConcluir: -1 },
+      },
+    })
+    expect(r?.aulas.a.conferenciasAoConcluir).toBe(2)
+    expect(r?.aulas.b.conferenciasAoConcluir).toBeUndefined()
+  })
+
+  it('ignora chaves de protótipo', () => {
+    const r = normalizar(
+      JSON.parse(
+        '{"versao":1,"aulas":{"__proto__":{"conferencias":5},"constructor":{"conferencias":1}},"conquistas":{"__proto__":{"em":"x"}}}',
+      ),
+    )!
+    expect(Object.getPrototypeOf(r.aulas)).toBe(Object.prototype)
+    expect(Object.keys(r.aulas)).toEqual([])
+    expect(Object.keys(r.conquistas)).toEqual([])
+  })
+
+  it('só aceita números finitos', () => {
+    const r = normalizar(
+      JSON.parse(
+        '{"versao":1,"aulas":{"a":{"conferencias":1e999}},"conquistas":{}}',
+      ),
+    )
+    expect(r?.aulas.a.conferencias).toBe(0)
+  })
 })

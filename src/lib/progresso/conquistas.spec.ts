@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { concluirAula, registrarConferencia } from './acoes'
 import { CONQUISTAS, registrarConquistas } from './conquistas'
 import { type Progresso, PROGRESSO_VAZIO } from './modelo'
 
@@ -42,5 +43,24 @@ describe('conquistas', () => {
   it('não dá a mesma conquista duas vezes', () => {
     const primeira = registrarConquistas(comAula(1, true), AGORA).progresso
     expect(registrarConquistas(primeira, AGORA).novas).toEqual([])
+  })
+
+  it('só conta as conferências até a primeira conclusão', () => {
+    let p: Progresso = PROGRESSO_VAZIO
+    p = registrarConferencia(p, 'a', '2026-10-09')
+    p = concluirAula(p, 'a', AGORA, '2026-10-09')
+    p = registrarConferencia(p, 'a', '2026-10-09')
+    p = registrarConferencia(p, 'a', '2026-10-09')
+    expect(registrarConquistas(p, AGORA).novas.map((c) => c.id)).toEqual([
+      'hello-world',
+    ])
+
+    let q: Progresso = PROGRESSO_VAZIO
+    for (let i = 0; i < 3; i++) q = registrarConferencia(q, 'a', '2026-10-09')
+    q = concluirAula(q, 'a', AGORA, '2026-10-09')
+    expect(registrarConquistas(q, AGORA).novas.map((c) => c.id)).toEqual([
+      'hello-world',
+      'persistente',
+    ])
   })
 })

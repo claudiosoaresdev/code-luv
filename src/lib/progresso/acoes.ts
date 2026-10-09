@@ -19,9 +19,11 @@ function comDia(p: Progresso, dia: string): Progresso {
     : { ...p, diasEstudados: [...p.diasEstudados, dia] }
 }
 
-/** Data local AAAA-MM-DD (o "sv-SE" formata exatamente assim). */
+/** Data local AAAA-MM-DD, montada à mão (sem depender de ICU). */
 export function hoje(data = new Date()) {
-  return data.toLocaleDateString('sv-SE')
+  const mes = String(data.getMonth() + 1).padStart(2, '0')
+  const dia = String(data.getDate()).padStart(2, '0')
+  return `${data.getFullYear()}-${mes}-${dia}`
 }
 
 export function salvarCodigo(p: Progresso, slug: string, codigo: string) {
@@ -46,7 +48,13 @@ export function concluirAula(
 ) {
   return comDia(
     comAula(p, slug, (aula) =>
-      aula.concluidaEm ? aula : { ...aula, concluidaEm: agora },
+      aula.concluidaEm
+        ? aula
+        : {
+            ...aula,
+            concluidaEm: agora,
+            conferenciasAoConcluir: aula.conferencias,
+          },
     ),
     dia,
   )

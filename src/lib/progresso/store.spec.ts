@@ -84,4 +84,64 @@ describe('store do progresso', () => {
     atualizarProgresso((p) => ({ ...p, nome: 'Bia' }))
     expect(aviso).toHaveBeenCalledTimes(2)
   })
+
+  it('guarda uma cópia do que não deu para ler antes de sobrescrever', () => {
+    localStorage.setItem('codeluv:progresso', '{isto não é json')
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    expect(localStorage.getItem('codeluv:progresso:recuperacao')).toBe(
+      '{isto não é json',
+    )
+
+    localStorage.setItem('codeluv:progresso', '{outro lixo')
+    esquecerProgressoEmMemoria()
+    atualizarProgresso((p) => ({ ...p, nome: 'Bia' }))
+    expect(localStorage.getItem('codeluv:progresso:recuperacao')).toBe(
+      '{isto não é json',
+    )
+  })
+
+  it('guarda cópia também de uma versão futura', () => {
+    const futuro = JSON.stringify({ versao: 2, aulas: {} })
+    localStorage.setItem('codeluv:progresso', futuro)
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    expect(localStorage.getItem('codeluv:progresso:recuperacao')).toBe(futuro)
+  })
+
+  it('acompanha mudanças feitas em outra aba', () => {
+    const aviso = vi.fn()
+    const cancelar = assinarProgresso(aviso)
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    aviso.mockClear()
+
+    localStorage.setItem(
+      'codeluv:progresso',
+      JSON.stringify({ ...obterEstado().progresso, nome: 'Bia' }),
+    )
+    window.dispatchEvent(
+      new StorageEvent('storage', { key: 'codeluv:progresso' }),
+    )
+
+    expect(aviso).toHaveBeenCalledTimes(1)
+    expect(obterEstado().progresso.nome).toBe('Bia')
+    cancelar()
+  })
+
+  it('o snapshot é estável no caminho corrompido e sem armazenamento', () => {
+    localStorage.setItem('codeluv:progresso', '{quebrado')
+    expect(obterEstado()).toBe(obterEstado())
+
+    esquecerProgressoEmMemoria()
+    localStorage.clear()
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('bloqueado')
+    })
+    expect(obterEstado()).toBe(obterEstado())
+  })
+
+  it('importar sobrescreve o progresso existente', () => {
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    const copia = JSON.stringify({ ...PROGRESSO_VAZIO, nome: 'Bia' })
+    expect(importarProgresso(copia)).toBe(true)
+    expect(obterEstado().progresso.nome).toBe('Bia')
+  })
 })
