@@ -18,6 +18,8 @@ type ResultPreviewProps = {
   podeVerComoCelular?: boolean
   /** Classes extras do iframe, como a altura (padrão h-64). */
   className?: string
+  /** id de um texto que explica o resultado (aria-describedby do iframe). */
+  ariaDescribedBy?: string
 }
 
 /**
@@ -28,6 +30,7 @@ export function ResultPreview({
   html,
   podeVerComoCelular = false,
   className,
+  ariaDescribedBy,
 }: ResultPreviewProps) {
   const [mostrado, setMostrado] = useState(html)
   const [celular, setCelular] = useState(false)
@@ -55,6 +58,7 @@ export function ResultPreview({
           title="Resultado do seu código"
           srcDoc={mostrado}
           sandbox=""
+          aria-describedby={ariaDescribedBy}
           className={cn(
             'block h-64 bg-white',
             celular ? 'mx-auto w-[360px] max-w-full' : 'w-full',

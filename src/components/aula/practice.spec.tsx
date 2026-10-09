@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -52,6 +52,21 @@ describe('Practice', () => {
     const secao = screen.getByRole('region', { name: 'Prática' })
     expect(secao).toHaveAttribute('id', 'pratica')
     expect(secao).toHaveAttribute('tabindex', '-1')
+  })
+
+  it('não oferece "Ver como celular" e mostra exatamente o código digitado', async () => {
+    render(<Practice aula={aula} />)
+
+    escrever('<h1>Só isto</h1>')
+
+    expect(
+      screen.queryByRole('button', { name: 'Ver como celular' }),
+    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.getByTitle('Resultado do seu código').getAttribute('srcdoc'),
+      ).toBe('<h1>Só isto</h1>'),
+    )
   })
 
   it('começa com o código inicial e sem poder concluir', () => {
@@ -243,8 +258,9 @@ describe('Practice', () => {
       screen.getByText(/Seu site ganhou uma parte nova/),
     ).toBeInTheDocument()
     expect(screen.getByTitle('Seu site').getAttribute('srcdoc')).toContain(
-      'Olá, eu sou a Ana',
+      aula.pratica.solucao.trim(),
     )
+    expect(screen.queryByText(/site de exemplo/)).not.toBeInTheDocument()
     expect(screen.queryByRole('img')).not.toBeInTheDocument() // sem a Luv grande
     expect(add).toHaveBeenCalledWith(
       expect.objectContaining({ title: 'Conquista: Hello, World' }),
@@ -276,6 +292,29 @@ describe('Practice — aula de CSS', () => {
     expect(documento()).toContain('<style>')
     expect(documento()).toContain(cores.pratica.inicial.trim())
     expect(documento()).toContain('<h1>Olá, eu sou a Ana</h1>')
+  })
+
+  it('liga o aviso do site de exemplo ao resultado', () => {
+    render(<Practice aula={cores} />)
+
+    expect(
+      screen.getByTitle('Resultado do seu código'),
+    ).toHaveAccessibleDescription(/site de exemplo/)
+  })
+
+  it('na conclusão sem HTML, explica o site de exemplo', async () => {
+    const user = userEvent.setup()
+    render(<Practice aula={cores} />)
+
+    fireEvent.change(editorCss(), { target: { value: cores.pratica.solucao } })
+    await user.click(screen.getByRole('button', { name: 'Conferir' }))
+    await user.click(screen.getByRole('button', { name: 'Concluir aula' }))
+
+    expect(screen.getByText('Aula concluída!')).toBeInTheDocument()
+    expect(screen.getByText(/site de exemplo/)).toBeInTheDocument()
+    expect(screen.getByTitle('Seu site').getAttribute('srcdoc')).toContain(
+      '<style>',
+    )
   })
 
   it('com HTML concluído, o CSS aparece no site dela', () => {

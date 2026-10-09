@@ -11,6 +11,8 @@ type LessonDoneProps = {
   proxima?: { slug: string; titulo: string }
   /** O site da aluna já com a parte desta aula. */
   siteHtml: string
+  /** Texto sob o site, quando ele precisa de uma explicação. */
+  aviso?: string
 }
 
 /**
@@ -18,7 +20,12 @@ type LessonDoneProps = {
  * Luv grande (a Luv do objetivo já está na tela — uma Luv por tela).
  * O foco vai para o título ao aparecer.
  */
-export function LessonDone({ titulo, proxima, siteHtml }: LessonDoneProps) {
+export function LessonDone({
+  titulo,
+  proxima,
+  siteHtml,
+  aviso,
+}: LessonDoneProps) {
   const tituloId = useId()
   const heading = useRef<HTMLHeadingElement>(null)
 
@@ -40,6 +47,7 @@ export function LessonDone({ titulo, proxima, siteHtml }: LessonDoneProps) {
         Seu site ganhou uma parte nova: <strong>{titulo}</strong>.
       </p>
       <SitePreview html={siteHtml} />
+      {aviso && <p className="text-base text-muted-foreground">{aviso}</p>}
       <div className="flex flex-wrap gap-3">
         {proxima && (
           <Link

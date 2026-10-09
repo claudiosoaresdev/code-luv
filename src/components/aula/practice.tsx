@@ -55,6 +55,7 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
   const modulo = getModulo(aula.modulo)
   const tituloId = useId()
   const ajudaId = useId()
+  const avisoId = useId()
   const estado = useProgresso()
   const progresso = estado?.progresso ?? PROGRESSO_VAZIO
   const salva = progresso.aulas[aula.slug]
@@ -129,14 +130,13 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
     : codigo
 
   if (concluida) {
+    const siteConcluido = montarSite(progresso, AULAS)
     return (
       <LessonDone
         titulo={aula.titulo}
         proxima={proxima}
-        siteHtml={documentoDoSite(
-          montarSite(progresso, AULAS),
-          siteDeExemplo(),
-        )}
+        siteHtml={documentoDoSite(siteConcluido, siteDeExemplo())}
+        aviso={siteConcluido.html === '' ? AVISO_SITE_DE_EXEMPLO : undefined}
       />
     )
   }
@@ -171,11 +171,14 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
         linguagem={aula.modulo}
       />
       {usaExemplo && (
-        <p className="text-sm text-muted-foreground">{AVISO_SITE_DE_EXEMPLO}</p>
+        <p id={avisoId} className="text-sm text-muted-foreground">
+          {AVISO_SITE_DE_EXEMPLO}
+        </p>
       )}
       <ResultPreview
         html={documento}
         podeVerComoCelular={aula.modulo === 'css'}
+        ariaDescribedBy={usaExemplo ? avisoId : undefined}
         className={aula.modulo === 'css' ? 'h-96' : undefined}
       />
 
