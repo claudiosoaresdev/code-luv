@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'CodeLuv',
+  title: { default: 'CodeLuv', template: '%s · CodeLuv' },
   description: 'Pequenos projetos, grandes conquistas.',
 }
 
