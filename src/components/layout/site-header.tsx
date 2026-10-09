@@ -42,7 +42,7 @@ function NavLinks({
         aria-current={active ? 'page' : undefined}
         className={cn(
           variant === 'bar'
-            ? 'inline-flex h-12 items-center border-b-2 border-transparent px-1 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground'
+            ? 'inline-flex h-12 items-center border-b-2 border-transparent px-2 text-sm outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring font-semibold text-muted-foreground transition-colors hover:text-foreground'
             : cn(buttonVariants({ variant: 'ghost' }), 'justify-start'),
           variant === 'bar' && active && 'border-primary text-foreground',
           variant === 'drawer' && active && 'bg-muted',
@@ -57,6 +57,14 @@ function NavLinks({
 export function SiteHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [lastPath, setLastPath] = useState(pathname)
+  const settingsActive = isActive(pathname, '/configuracoes')
+
+  // Fecha a gaveta quando a rota muda (voltar/avançar do navegador).
+  if (pathname !== lastPath) {
+    setLastPath(pathname)
+    setOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-10 border-b-2 border-muted bg-background">
@@ -66,7 +74,7 @@ export function SiteHeader() {
             render={
               <Button
                 variant="outline"
-                size="icon-sm"
+                size="icon"
                 aria-label="Abrir menu"
                 className="md:hidden"
               />
@@ -90,7 +98,7 @@ export function SiteHeader() {
 
         <Link
           href="/"
-          className="flex items-center gap-2 font-display text-xl font-bold"
+          className="flex items-center gap-2 font-display text-xl font-bold outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           <CodeXmlIcon aria-hidden className="text-link" />
           CodeLuv
@@ -106,9 +114,11 @@ export function SiteHeader() {
         <Link
           href="/configuracoes"
           aria-label="Configurações"
+          aria-current={settingsActive ? 'page' : undefined}
           className={cn(
-            buttonVariants({ variant: 'outline', size: 'icon-sm' }),
+            buttonVariants({ variant: 'outline', size: 'icon' }),
             'ml-auto md:ml-0',
+            settingsActive && 'bg-muted text-foreground',
           )}
         >
           <SettingsIcon />

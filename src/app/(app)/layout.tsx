@@ -8,7 +8,11 @@ import { SiteHeader } from '@/components/layout/site-header'
 export default function AppLayout({ children }: LayoutProps<'/'>) {
   return (
     <div className="flex min-h-dvh flex-col">
-      <Suspense fallback={<div className="h-16 border-b-2 border-muted" />}>
+      <Suspense
+        fallback={
+          <div className="sticky top-0 z-10 box-content h-16 border-b-2 border-muted bg-background" />
+        }
+      >
         <SiteHeader />
       </Suspense>
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-4 py-12 md:px-6">

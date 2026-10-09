@@ -1,14 +1,20 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { SiteHeader } from './site-header'
 
+let pathname = '/aulas'
+
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/aulas',
+  usePathname: () => pathname,
 }))
 
 describe('SiteHeader', () => {
+  beforeEach(() => {
+    pathname = '/aulas'
+  })
+
   it('marca o destino atual na navegação principal', () => {
     render(<SiteHeader />)
 
@@ -51,5 +57,44 @@ describe('SiteHeader', () => {
       'page',
     )
     expect(within(drawer).getAllByRole('link')).toHaveLength(4)
+  })
+
+  it('marca Configurações quando é a página atual', () => {
+    pathname = '/configuracoes'
+    render(<SiteHeader />)
+
+    expect(screen.getByRole('link', { name: 'Configurações' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+    const nav = screen.getByRole('navigation', { name: 'Principal' })
+    for (const link of within(nav).getAllByRole('link')) {
+      expect(link).not.toHaveAttribute('aria-current')
+    }
+  })
+
+  it('tem botão de fechar na gaveta', async () => {
+    const user = userEvent.setup()
+    render(<SiteHeader />)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+
+    const drawer = await screen.findByRole('dialog', { name: 'Menu' })
+    expect(
+      within(drawer).getByRole('button', { name: 'Fechar' }),
+    ).toBeInTheDocument()
+  })
+
+  it('fecha a gaveta ao escolher um destino', async () => {
+    const user = userEvent.setup()
+    render(<SiteHeader />)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const drawer = await screen.findByRole('dialog', { name: 'Menu' })
+    await user.click(within(drawer).getByRole('link', { name: 'Conquistas' }))
+
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    )
   })
 })
