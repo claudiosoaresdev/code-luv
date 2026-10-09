@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { LightbulbIcon } from 'lucide-react'
 
@@ -19,6 +19,7 @@ type HintPanelProps = {
 export function HintPanel({ pistas, solucao }: HintPanelProps) {
   const [abertas, setAbertas] = useState(0)
   const [solucaoAberta, setSolucaoAberta] = useState(false)
+  const tituloId = useId()
   const solucaoRef = useRef<HTMLDivElement>(null)
   const temMaisPistas = abertas < pistas.length
 
@@ -45,10 +46,14 @@ export function HintPanel({ pistas, solucao }: HintPanelProps) {
       {solucaoAberta && (
         <div
           ref={solucaoRef}
+          role="region"
+          aria-labelledby={tituloId}
           tabIndex={-1}
           className="flex flex-col gap-2 outline-none"
         >
-          <p className="text-sm font-semibold">Uma solução possível</p>
+          <p id={tituloId} className="text-sm font-semibold">
+            Uma solução possível
+          </p>
           <pre className="overflow-x-auto rounded-lg border-2 border-border bg-popover p-4 font-mono text-sm leading-relaxed">
             {solucao}
           </pre>

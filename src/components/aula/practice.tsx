@@ -2,7 +2,7 @@
 
 import { useId, useState } from 'react'
 
-import { LuvSays } from '@/components/luv/luv-says'
+import { Bubble, BubbleContent } from '@/components/ui/bubble'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import type { Aula } from '@/content/aulas/types'
@@ -61,7 +61,6 @@ export function Practice({ aula, proxima }: PracticeProps) {
     toast.add({
       title: 'Exercício recomeçado',
       description: 'Seu código voltou para o começo.',
-      timeout: 6000,
       actionProps: {
         children: 'Desfazer',
         onClick: () => mudarCodigo(anterior),
@@ -114,12 +113,11 @@ export function Practice({ aula, proxima }: PracticeProps) {
       {/* Região viva persistente: a fala troca aqui dentro e é anunciada. */}
       <div role="status">
         {resultados !== null && (
-          <LuvSays
-            announce={false}
-            state={tudoCerto ? 'comemorar' : 'incentivo'}
-          >
-            {falaDaLuv(faltam)}
-          </LuvSays>
+          <Bubble variant="tinted">
+            <BubbleContent className="text-base">
+              {falaDaLuv(faltam)}
+            </BubbleContent>
+          </Bubble>
         )}
       </div>
 

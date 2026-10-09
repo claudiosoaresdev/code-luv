@@ -46,7 +46,7 @@ describe('HintPanel', () => {
     await user.click(screen.getByRole('button', { name: 'Ver solução' }))
     expect(screen.getByText(SOLUCAO)).toBeInTheDocument()
     expect(
-      screen.getByText('Uma solução possível').closest('[tabindex="-1"]'),
+      screen.getByRole('region', { name: 'Uma solução possível' }),
     ).toHaveFocus()
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })

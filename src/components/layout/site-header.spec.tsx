@@ -1,6 +1,6 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { SiteHeader } from './site-header'
 
@@ -11,7 +11,16 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('SiteHeader', () => {
+  // jsdom não navega; evita o aviso "Not implemented: navigation".
+  const bloquearNavegacao = (e: Event) => {
+    if ((e.target as Element).closest('a')) e.preventDefault()
+  }
+  afterEach(() =>
+    document.removeEventListener('click', bloquearNavegacao, true),
+  )
+
   beforeEach(() => {
+    document.addEventListener('click', bloquearNavegacao, true)
     pathname = '/aulas'
   })
 
