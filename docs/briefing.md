@@ -653,16 +653,16 @@ Só aumenta quando ela aprende e aplica. Não sobe com tempo de tela nem com cli
 
 ## 14. Perguntas em aberto
 
-| #   | Pergunta                                                                                                                                                                           | Por que importa                                                                     | Quem responde  | Prazo                  | Estado |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------- | ---------------------- | ------ |
-| Q1  | A voz sintética gratuita em português é boa o bastante, inclusive para termos em inglês?                                                                                           | É o recurso central; voz ruim derruba a aposta                                      | Mentor + aluna | Antes da 2ª aula       | aberta |
-| Q2  | O que ela quer ter no site pessoal (seções, temas, gostos)?                                                                                                                        | Define as partes do site e, portanto, a ordem das aulas                             | Aluna          | Antes do roteiro final | aberta |
-| Q3  | Ela vai estudar em mais de um aparelho? Precisa guardar uma cópia do progresso?                                                                                                    | Define se só o aparelho basta ou se é preciso uma forma de levar junto              | Aluna          | Fase 1                 | aberta |
-| Q4  | Onde o site dela será publicado e com que endereço?                                                                                                                                | Afeta a última etapa da jornada e pode exigir conta em serviço externo              | Mentor         | Fase 2                 | aberta |
-| Q5  | Quais outros recursos de aprendizagem valem a pena: código explicado linha a linha, mini-quizzes, revisão periódica dos conceitos, glossário, demonstrações visuais passo a passo? | A escuta é a aposta inicial; outros recursos só entram se o uso mostrar necessidade | Mentor + aluna | Fim da Fase 1          | aberta |
-| Q6  | Em que momento ela passa do navegador para um editor "de verdade" no computador?                                                                                                   | Faz parte de se tornar autônoma, mas pode assustar cedo demais                      | Mentor         | Fase 3                 | aberta |
-| Q7  | A aluna quer participar da criação do próprio CodeLuv (escrever aulas, ajustar o visual)?                                                                                          | Era um princípio da ideia original; precisa ser vontade dela                        | Aluna          | Fase 3                 | aberta |
-| Q8  | A Luv deve ter uma voz própria e reconhecível, ou qualquer voz em português serve?                                                                                                 | Afeta personalidade e custo                                                         | Mentor + aluna | Fase 2                 | aberta |
+| #   | Pergunta                                                                                                                                                                           | Por que importa                                                                     | Quem responde  | Prazo                  | Estado  |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------- | ---------------------- | ------- |
+| Q1  | A voz sintética gratuita em português é boa o bastante, inclusive para termos em inglês?                                                                                           | É o recurso central; voz ruim derruba a aposta                                      | Mentor + aluna | Antes da 2ª aula       | aberta  |
+| Q2  | O que ela quer ter no site pessoal (seções, temas, gostos)?                                                                                                                        | Define as partes do site e, portanto, a ordem das aulas                             | Aluna          | Antes do roteiro final | aberta  |
+| Q3  | Ela vai estudar em mais de um aparelho? Precisa guardar uma cópia do progresso? Hoje: cópia do progresso em arquivo (Configurações).                                               | Define se só o aparelho basta ou se é preciso uma forma de levar junto              | Aluna          | Fase 1                 | parcial |
+| Q4  | Onde o site dela será publicado e com que endereço?                                                                                                                                | Afeta a última etapa da jornada e pode exigir conta em serviço externo              | Mentor         | Fase 2                 | aberta  |
+| Q5  | Quais outros recursos de aprendizagem valem a pena: código explicado linha a linha, mini-quizzes, revisão periódica dos conceitos, glossário, demonstrações visuais passo a passo? | A escuta é a aposta inicial; outros recursos só entram se o uso mostrar necessidade | Mentor + aluna | Fim da Fase 1          | aberta  |
+| Q6  | Em que momento ela passa do navegador para um editor "de verdade" no computador?                                                                                                   | Faz parte de se tornar autônoma, mas pode assustar cedo demais                      | Mentor         | Fase 3                 | aberta  |
+| Q7  | A aluna quer participar da criação do próprio CodeLuv (escrever aulas, ajustar o visual)?                                                                                          | Era um princípio da ideia original; precisa ser vontade dela                        | Aluna          | Fase 3                 | aberta  |
+| Q8  | A Luv deve ter uma voz própria e reconhecível, ou qualquer voz em português serve?                                                                                                 | Afeta personalidade e custo                                                         | Mentor + aluna | Fase 2                 | aberta  |
 
 ---
 
@@ -734,6 +734,16 @@ Só aumenta quando ela aprende e aplica. Não sobe com tempo de tela nem com cli
 - **Por quê:** separar o "o quê e por quê" do "como" permite que qualquer pessoa discuta a intenção.
 - **O que abrimos mão:** ter tudo num único arquivo.
 
+**D-08 — Cópia do progresso em arquivo, sem conta**
+
+- **Data:** 2026-10-09
+- **Contexto:** o progresso fica só no aparelho (D-05); limpar o navegador ou trocar de computador perderia tudo.
+- **Alternativas consideradas:** conta com login; nada; cópia em arquivo que a aluna baixa e recupera.
+- **Decisão:** cópia em arquivo, em Configurações ("Baixar uma cópia" e "Recuperar de uma cópia").
+- **Por quê:** protege contra perda sem pedir cadastro nem dados pessoais (discrição, respeito ao tempo).
+- **O que abrimos mão:** sincronização automática entre aparelhos.
+- **Revisar se:** Q3 mostrar que ela estuda em mais de um aparelho com frequência.
+
 ---
 
 ## 16. Vocabulário
@@ -797,6 +807,7 @@ Só aumenta quando ela aprende e aplica. Não sobe com tempo de tela nem com cli
 | ---------- | ------------------------------------------------------------------------------------------------------------- | -------------- |
 | 2026-10-09 | Primeira versão (formato livre, com decisões técnicas e de interface)                                         | Claudio Soares |
 | 2026-10-09 | Reescrito no modelo de briefing: só intenção; foco no site pessoal e na escuta; identidade em linguagem comum | Claudio Soares |
+| 2026-10-09 | Q3 parcialmente respondida e D-08 (cópia do progresso)                                                        | Claudio Soares |
 
 ---
 
