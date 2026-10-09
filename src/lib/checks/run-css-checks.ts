@@ -14,20 +14,31 @@ function normalizarSeletor(texto: string) {
     .toLowerCase()
 }
 
+/** Com var() não dá para validar o valor aqui; o navegador resolve depois. */
+function valida(declaracao: csstree.Declaration) {
+  const temVar = csstree.find(
+    declaracao.value,
+    (no) => no.type === 'Function' && no.name.toLowerCase() === 'var',
+  )
+  return temVar !== null || !csstree.lexer.matchDeclaration(declaracao).error
+}
+
 /**
  * Lê as regras como o navegador: declaração com valor inválido não conta
  * (DS-14). Erros de sintaxe não interrompem a leitura.
  */
 function lerRegras(css: string): Regra[] {
   const regras: Regra[] = []
+  let dentroDeMidia = 0 // profundidade de @media (mesmo dentro de outro at-rule)
   const ast = csstree.parse(css, { onParseError: () => {} })
   csstree.walk(ast, {
-    visit: 'Rule',
-    enter(node) {
-      if (node.prelude.type !== 'SelectorList') return
+    enter(node: csstree.CssNode) {
+      if (node.type === 'Atrule' && node.name.toLowerCase() === 'media') {
+        dentroDeMidia++
+      }
+      if (node.type !== 'Rule' || node.prelude.type !== 'SelectorList') return
       const declaracoes = node.block.children.toArray().flatMap((item) =>
-        item.type === 'Declaration' &&
-        !csstree.lexer.matchDeclaration(item).error
+        item.type === 'Declaration' && valida(item)
           ? [
               {
                 propriedade: item.property.toLowerCase(),
@@ -40,9 +51,14 @@ function lerRegras(css: string): Regra[] {
         seletores: node.prelude.children
           .toArray()
           .map((seletor) => csstree.generate(seletor).toLowerCase()),
-        emMidia: this.atrule?.name === 'media',
+        emMidia: dentroDeMidia > 0,
         declaracoes,
       })
+    },
+    leave(node: csstree.CssNode) {
+      if (node.type === 'Atrule' && node.name.toLowerCase() === 'media') {
+        dentroDeMidia--
+      }
     },
   })
   return regras

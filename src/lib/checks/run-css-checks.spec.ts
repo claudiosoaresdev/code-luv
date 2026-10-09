@@ -78,6 +78,34 @@ describe('runCssChecks', () => {
     ).toBe(true)
   })
 
+  it('valor com var() conta, como no navegador', () => {
+    expect(
+      passa(
+        ':root { --rosa: pink; } h1 { color: var(--rosa); }',
+        regra('h1', ['color']),
+      ),
+    ).toBe(true)
+    expect(passa('h1 { color: VAR(--rosa); }', regra('h1', ['color']))).toBe(
+      true,
+    )
+  })
+
+  it('emMidia vale com @media aninhado em outro at-rule ou em maiúsculas', () => {
+    const noCelular = regra('h1', ['font-size'], { emMidia: true })
+    expect(
+      passa(
+        '@media (max-width: 400px) { @supports (display: grid) { h1 { font-size: 2rem; } } }',
+        noCelular,
+      ),
+    ).toBe(true)
+    expect(
+      passa('@MEDIA (max-width: 400px) { h1 { font-size: 2rem; } }', noCelular),
+    ).toBe(true)
+    expect(
+      passa('@supports (display: grid) { h1 { font-size: 2rem; } }', noCelular),
+    ).toBe(false)
+  })
+
   it('chave sem fechar no fim ainda vale, como no navegador', () => {
     expect(passa('ul { display: flex', regra('ul', ['display']))).toBe(true)
   })
