@@ -375,20 +375,20 @@ A base é o shadcn/ui (DS-09): os 61 componentes estão em `src/components/ui/` 
 | `Button`               | ação         | `button`                                          | contorno 2px, `shadow-sticker`, `gloss` no `default`, 48px de altura | pronto            |
 | `IconButton`           | ação         | `button` com `size="icon"`                        | 48×48px                                                              | pronto            |
 | `Card`                 | estrutura    | `card`                                            | contorno 2px, `shadow-sticker`, título em Poppins 18px               | pronto            |
-| `RetroWindow`          | estrutura    | `card` (composição)                               | barra de título com três bolinhas                                    | proposto          |
+| `RetroWindow`          | estrutura    | `card` (composição)                               | barra de título com três bolinhas                                    | pronto            |
 | `TextField`            | entrada      | `field` + `input`                                 | —                                                                    | proposto          |
 | `Switch`               | entrada      | `switch`                                          | —                                                                    | proposto          |
 | `Tabs`                 | navegação    | `tabs`                                            | 48px de altura, rótulo em 600                                        | pronto            |
-| `Header` / `NavDrawer` | navegação    | `button` (`ghost`) + `sheet`                      | —                                                                    | proposto          |
+| `Header` / `NavDrawer` | navegação    | `button` (`ghost`) + `sheet`                      | —                                                                    | pronto            |
 | `LessonStepper`        | navegação    | `progress` ou `breadcrumb` — decidir no plano 2   | —                                                                    | proposto          |
 | `ProgressBar`          | exibição     | `progress`                                        | trilho com contorno 2px, preenchimento `bg-brand` + `gloss`          | pronto            |
 | `Badge`                | exibição     | `badge`                                           | —                                                                    | pronto            |
 | `AchievementBadge`     | exibição     | `card` + `badge` (composição)                     | —                                                                    | proposto          |
 | `LessonListItem`       | exibição     | `item`                                            | —                                                                    | proposto          |
-| `LuvBubble`            | feedback     | `message` + `bubble` (`tinted`) + `avatar` (`xl`) | `Avatar` ganhou o tamanho `xl` (64px)                                | proposto          |
+| `LuvBubble`            | feedback     | `message` + `bubble` (`tinted`) + `avatar` (`xl`) | `Avatar` ganhou o tamanho `xl` (64px)                                | pronto            |
 | `Toast`                | feedback     | `toast`                                           | —                                                                    | proposto          |
 | `Dialog`               | sobreposição | `dialog` · `alert-dialog` (destrutivo)            | —                                                                    | proposto          |
-| `EmptyState`           | feedback     | `empty` + `LuvBubble` (avatar)                    | —                                                                    | proposto          |
+| `EmptyState`           | feedback     | `empty` + `LuvBubble` (avatar)                    | —                                                                    | pronto            |
 | `ListenControls`       | aprendizagem | `card` + `button` + `toggle-group` + `kbd`        | `ToggleGroup`: 48px, item pressionado em `bg-primary`                | proposto          |
 | `ReadAlongText`        | aprendizagem | `<mark>` com `bg-highlight`                       | —                                                                    | proposto          |
 | `CodeEditor`           | aprendizagem | `tabs` + editor de código (plano 2)               | —                                                                    | proposto          |
@@ -631,10 +631,8 @@ Não há aplicativo nativo previsto.
 | Ícones de pixel                      | design             | só existem no moodboard (coração, estrela, planeta, cursor)                                                  | redesenhar em grade 16×16; até lá, Lucide (`HeartIcon`, `SparklesIcon`)                 | Fase 1 |
 | Tema claro                           | código             | valores definidos em `:root`, sem seletor                                                                    | implementar com seletor em Configurações                                                | Fase 2 |
 | `gradient.synthwave` e `elevation.3` | código             | definidos aqui, não implementados                                                                            | implementar quando a celebração de módulo e os diálogos forem construídos               | Fase 1 |
-| Rota `/preview`                      | código             | página provisória de validação visual                                                                        | remover no fim do Plano 1                                                               | Fase 1 |
 | Largura máxima                       | código             | cabeçalho e conteúdo usam `max-w-6xl` (1152px); `layout.max` diz 1200px                                      | alinhar o token ou o documento                                                          | Fase 1 |
 | Camadas de sobreposição              | código             | `Sheet`/`Dialog` do shadcn usam `z-50`; a tabela 3.6 prevê `z.overlay` 30 e `z.modal` 40                     | ajustar a tabela 3.6 aos valores do shadcn (não usar `z-index` manual em sobreposições) | Fase 1 |
-| Link "Pular para o conteúdo"         | código             | não existe; os landmarks bastam para WCAG 2.4.1, mas o link ajuda quem navega por teclado                    | adicionar no layout do app                                                              | Fase 1 |
 
 ---
 
@@ -774,6 +772,7 @@ Não há aplicativo nativo previsto.
 | 2026-10-09 | 0.2.2 — área de toque de 48px sem exceção no cabeçalho; divergências da revisão do Plano 1 registradas                                                                                  | Claudio Soares |
 | 2026-10-09 | 0.2.1 — escolhas visuais do Plano 1 registradas (DS-12)                                                                                                                                 | Claudio Soares |
 | 2026-10-09 | 0.2.0 — shadcn/ui como base (DS-09); tokens com nomes do shadcn; `font-display` (DS-10); destaque sem brilho (DS-11); inventário com a base de cada componente; contrastes recalculados | Claudio Soares |
+| 2026-10-09 | Plano 1 entregue: RetroWindow, SiteHeader, LuvSays/LuvAvatar e EmptyState prontos; `/preview` removida                                                                                  | Claudio Soares |
 
 ---
 
