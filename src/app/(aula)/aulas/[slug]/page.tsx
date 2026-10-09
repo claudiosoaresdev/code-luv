@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { Escuta } from '@/components/aula/escuta'
 import { LessonHeader } from '@/components/aula/lesson-header'
 import { Practice } from '@/components/aula/practice'
 import { LuvSays } from '@/components/luv/luv-says'
@@ -74,12 +75,16 @@ async function AulaConteudo({
           <LuvSays state="aprender" announce={false}>
             {aula.objetivo}
           </LuvSays>
-          <Explicacao />
+          <Escuta focoAoTerminar="pratica">
+            <Explicacao />
+          </Escuta>
         </article>
-        <Practice
-          aula={aula}
-          proxima={proxima && { slug: proxima.slug, titulo: proxima.titulo }}
-        />
+        <div id="pratica" tabIndex={-1} className="outline-none">
+          <Practice
+            aula={aula}
+            proxima={proxima && { slug: proxima.slug, titulo: proxima.titulo }}
+          />
+        </div>
       </main>
     </>
   )

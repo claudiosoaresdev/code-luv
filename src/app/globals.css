@@ -225,3 +225,10 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Trecho em leitura na escuta (DS-06): dois sinais — fundo e sublinhado — e sem transição. */
+::highlight(leitura) {
+  background-color: var(--highlight);
+  text-decoration: underline 2px var(--primary);
+  text-underline-offset: 4px;
+}
