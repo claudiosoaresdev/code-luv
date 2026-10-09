@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Aula } from '@/content/aulas/types'
 
+import { concluirAula, salvarCodigo } from './acoes'
 import { type Progresso, PROGRESSO_VAZIO } from './modelo'
 import { montarSite, proximaParaEstudar, ultimaConcluida } from './site'
 
@@ -62,5 +63,26 @@ describe('site e caminho', () => {
       ),
     }
     expect(proximaParaEstudar(p, AULAS)).toBeUndefined()
+  })
+
+  it('o site mostra o código com que a aula foi concluída, não as edições depois', () => {
+    const slug = 'a'
+    let p = salvarCodigo(PROGRESSO_VAZIO, slug, '<h1>A</h1>')
+    p = concluirAula(p, slug, FEITA, '2026-10-09')
+    p = salvarCodigo(p, slug, '<h1>B</h1>')
+    expect(montarSite(p, AULAS).html).toBe('<h1>A</h1>')
+
+    p = concluirAula(p, slug, FEITA, '2026-10-10')
+    expect(montarSite(p, AULAS).html).toBe('<h1>B</h1>')
+  })
+
+  it('dados antigos, sem codigoConcluido, usam o código salvo', () => {
+    const p: Progresso = {
+      ...PROGRESSO_VAZIO,
+      aulas: {
+        a: { codigo: '<p>velho</p>', conferencias: 1, concluidaEm: FEITA },
+      },
+    }
+    expect(montarSite(p, AULAS).html).toBe('<p>velho</p>')
   })
 })

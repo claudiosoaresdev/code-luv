@@ -47,15 +47,13 @@ export function concluirAula(
   dia: string,
 ) {
   return comDia(
-    comAula(p, slug, (aula) =>
-      aula.concluidaEm
-        ? aula
-        : {
-            ...aula,
-            concluidaEm: agora,
-            conferenciasAoConcluir: aula.conferencias,
-          },
-    ),
+    comAula(p, slug, (aula) => ({
+      ...aula,
+      codigoConcluido: aula.codigo,
+      ...(aula.concluidaEm
+        ? {}
+        : { concluidaEm: agora, conferenciasAoConcluir: aula.conferencias }),
+    })),
     dia,
   )
 }

@@ -10,7 +10,13 @@ export function montarSite(p: Progresso, aulas: Aula[]) {
   const feitas = aulas.filter((aula) => concluida(p, aula))
   return {
     html: feitas
-      .map((aula) => (p.aulas[aula.slug]?.codigo ?? '').trim())
+      .map((aula) =>
+        (
+          p.aulas[aula.slug]?.codigoConcluido ??
+          p.aulas[aula.slug]?.codigo ??
+          ''
+        ).trim(),
+      )
       .filter(Boolean)
       .join('\n\n'),
     partes: feitas.map(({ slug, titulo }) => ({ slug, titulo })),

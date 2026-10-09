@@ -1,3 +1,4 @@
+import { registrarConquistas } from './conquistas'
 import { normalizar, type Progresso, PROGRESSO_VAZIO } from './modelo'
 
 const CHAVE = 'codeluv:progresso'
@@ -92,6 +93,7 @@ export function apagarProgresso() {
   try {
     localStorage.removeItem(CHAVE)
     localStorage.removeItem(CHAVE_RECUPERACAO)
+    localStorage.removeItem('codeluv:velocidade') // chave do Plano 3
   } catch {
     // Sem armazenamento: só a memória é limpa.
   }
@@ -115,7 +117,7 @@ export function importarProgresso(texto: string) {
   }
   const progresso = normalizar(dado)
   if (!progresso) return false
-  gravar(progresso)
+  gravar(registrarConquistas(progresso, new Date().toISOString()).progresso)
   return true
 }
 

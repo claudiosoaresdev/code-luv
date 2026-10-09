@@ -80,4 +80,16 @@ describe('normalizar', () => {
     )
     expect(r?.aulas.a.conferencias).toBe(0)
   })
+
+  it('valida codigoConcluido como texto', () => {
+    const r = normalizar({
+      versao: 1,
+      aulas: {
+        a: { conferencias: 1, codigoConcluido: '<p>x</p>' },
+        b: { conferencias: 1, codigoConcluido: 3 },
+      },
+    })
+    expect(r?.aulas.a.codigoConcluido).toBe('<p>x</p>')
+    expect(r?.aulas.b.codigoConcluido).toBeUndefined()
+  })
 })

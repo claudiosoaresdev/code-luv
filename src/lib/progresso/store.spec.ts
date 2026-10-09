@@ -154,4 +154,21 @@ describe('store do progresso', () => {
 
     expect(localStorage.getItem('codeluv:progresso:recuperacao')).toBeNull()
   })
+
+  it('importar uma cópia reconhece as conquistas já merecidas', () => {
+    const copia = JSON.stringify({
+      ...PROGRESSO_VAZIO,
+      aulas: {
+        a: { conferencias: 1, concluidaEm: '2026-10-09T20:00:00.000Z' },
+      },
+    })
+    expect(importarProgresso(copia)).toBe(true)
+    expect(obterEstado().progresso.conquistas['hello-world']).toBeDefined()
+  })
+
+  it('apagar também remove a chave antiga da velocidade', () => {
+    localStorage.setItem('codeluv:velocidade', '1.25')
+    apagarProgresso()
+    expect(localStorage.getItem('codeluv:velocidade')).toBeNull()
+  })
 })

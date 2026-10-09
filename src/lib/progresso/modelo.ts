@@ -12,6 +12,8 @@ export type ProgressoAula = {
   conferencias: number
   /** ISO 8601; a primeira conclusão. */
   concluidaEm?: string
+  /** O código com que a aula foi concluída pela última vez (alimenta Meu site). */
+  codigoConcluido?: string
   /** Quantas conferências havia quando concluiu pela primeira vez. */
   conferenciasAoConcluir?: number
 }
@@ -52,6 +54,8 @@ function aulaValida(valor: unknown): ProgressoAula | null {
   const aula: ProgressoAula = {
     conferencias: contagem(valor.conferencias) ?? 0,
   }
+  if (typeof valor.codigoConcluido === 'string')
+    aula.codigoConcluido = valor.codigoConcluido
   const aoConcluir = contagem(valor.conferenciasAoConcluir)
   if (aoConcluir !== undefined) aula.conferenciasAoConcluir = aoConcluir
   if (typeof valor.codigo === 'string') aula.codigo = valor.codigo

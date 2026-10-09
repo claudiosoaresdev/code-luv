@@ -10,6 +10,7 @@ export type Conquista = {
   ganhou: (p: Progresso) => boolean
 }
 
+// Conta toda aula concluída no progresso, mesmo que o slug não exista mais em AULAS.
 const concluidas = (p: Progresso) =>
   Object.values(p.aulas).filter((aula) => aula.concluidaEm)
 
