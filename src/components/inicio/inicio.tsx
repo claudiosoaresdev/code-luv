@@ -8,29 +8,37 @@ import { PlayIcon, TriangleAlertIcon } from 'lucide-react'
 
 import { LuvSays } from '@/components/luv/luv-says'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Progress, ProgressLabel } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AULAS } from '@/content/aulas'
-import { getModulo } from '@/content/modulos'
+import { MODULOS } from '@/content/modulos'
 import { definirNome, pularNome } from '@/lib/progresso/acoes'
-import type { Progresso } from '@/lib/progresso/modelo'
+import { metaDe, type Progresso } from '@/lib/progresso/modelo'
+import {
+  diasDaSemana,
+  mapaDeDias,
+  progressoPorModulo,
+  vitrineDeConquistas,
+} from '@/lib/progresso/painel'
 import { proximaParaEstudar, ultimaConcluida } from '@/lib/progresso/site'
 import { atualizarProgresso } from '@/lib/progresso/store'
 import { useProgresso } from '@/lib/progresso/use-progresso'
+import { cn } from '@/lib/utils'
+
+import { ContinuarCard } from './continuar-card'
+import { CARTAO } from './estilos'
+import { LuvDaSemana } from './luv-da-semana'
+import { MapaDeDias } from './mapa-de-dias'
+import { ProgressoModulos } from './progresso-modulos'
+import { SuaSemana } from './sua-semana'
+import { VitrineConquistas } from './vitrine-conquistas'
 
 const TITULO = 'font-display text-4xl leading-tight font-extrabold md:text-6xl'
 const GRADE =
   'grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1.2fr_1fr]'
+const PAINEL = 'mx-auto flex w-full max-w-3xl flex-col gap-6'
 
 function Luv() {
   return (
@@ -101,84 +109,63 @@ function PrimeiroUso({ onComecar }: { onComecar: () => void }) {
   )
 }
 
-/** DS 9 — Retomada: "Continuar" em destaque e o progresso do módulo. */
-function BoasVindas({
+/** O dashboard de quem já começou (spec 2026-10-09-dashboard-design). */
+function Painel({
   progresso,
   perdido,
 }: {
   progresso: Progresso
   perdido: boolean
 }) {
-  const proxima = proximaParaEstudar(progresso, AULAS)
-  const ultima = ultimaConcluida(progresso, AULAS)
-  const concluidas = AULAS.filter(
-    (a) => progresso.aulas[a.slug]?.concluidaEm,
-  ).length
+  const progressoId = useId()
+  // Só roda no cliente: useProgresso devolve null no servidor.
+  const agora = new Date()
+  const meta = metaDe(progresso)
+  const dias = diasDaSemana(progresso, agora)
+  const estudados = dias.filter((dia) => dia.estudou).length
+  const conquistas = vitrineDeConquistas(progresso)
 
   return (
-    <section className={GRADE}>
-      <div className="flex flex-col gap-6">
-        <h1 className={TITULO}>
-          {progresso.nome ? `Oi, ${progresso.nome}!` : 'Oi!'}
-        </h1>
+    <div className={PAINEL}>
+      <LuvDaSemana nome={progresso.nome} estudados={estudados} meta={meta} />
 
-        {perdido && (
-          <Alert variant="warning">
-            <TriangleAlertIcon />
-            <AlertTitle>
-              Não encontramos seu progresso neste aparelho
-            </AlertTitle>
-            <AlertDescription>
-              Se você guardou uma cópia, dá para recuperar em{' '}
-              <Link href="/configuracoes">Configurações</Link>.
-            </AlertDescription>
-          </Alert>
-        )}
+      {perdido && (
+        <Alert variant="warning">
+          <TriangleAlertIcon />
+          <AlertTitle>Não encontramos seu progresso neste aparelho</AlertTitle>
+          <AlertDescription>
+            Se você guardou uma cópia, dá para recuperar em{' '}
+            <Link href="/configuracoes">Configurações</Link>.
+          </AlertDescription>
+        </Alert>
+      )}
 
-        {proxima ? (
-          <Card className="border-primary shadow-sticker-lg">
-            <CardHeader>
-              <CardTitle>Continuar: {proxima.titulo}</CardTitle>
-              <CardDescription>
-                {ultima
-                  ? `Na última vez você concluiu “${ultima.titulo}”.`
-                  : `Aula ${proxima.ordem} de ${getModulo(proxima.modulo).nome} · cerca de ${proxima.duracaoMin} minutos`}
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Link
-                href={`/aulas/${proxima.slug}`}
-                className={buttonVariants({ size: 'lg' })}
-              >
-                <PlayIcon data-icon="inline-start" />
-                {ultima ? 'Continuar' : 'Começar a aula'}
-              </Link>
-            </CardFooter>
-          </Card>
-        ) : (
-          <div className="flex flex-col gap-3">
-            <p className="text-lg">
-              Você concluiu todas as aulas disponíveis por enquanto. Que tal
-              olhar o seu site?
-            </p>
-            <Link href="/meu-site" className={buttonVariants({ size: 'lg' })}>
-              Ver meu site
-            </Link>
-          </div>
-        )}
+      <ContinuarCard
+        proxima={proximaParaEstudar(progresso, AULAS)}
+        ultima={ultimaConcluida(progresso, AULAS)}
+      />
+      <SuaSemana dias={dias} meta={meta} />
 
-        <Progress
-          value={(concluidas / AULAS.length) * 100}
-          getAriaValueText={() => `${concluidas} de ${AULAS.length} aulas`}
-        >
-          <ProgressLabel>Suas aulas</ProgressLabel>
-          <span className="ml-auto text-sm text-muted-foreground tabular-nums">
-            {concluidas} de {AULAS.length}
-          </span>
-        </Progress>
-      </div>
-      <Luv />
-    </section>
+      <section
+        aria-labelledby={progressoId}
+        className="mt-4 flex flex-col gap-6"
+      >
+        <h2 id={progressoId} className="font-display text-2xl font-semibold">
+          Seu progresso
+        </h2>
+        <ProgressoModulos
+          modulos={progressoPorModulo(progresso, AULAS, MODULOS)}
+        />
+        <MapaDeDias
+          semanas={mapaDeDias(progresso, agora)}
+          total={progresso.diasEstudados.length}
+        />
+        <VitrineConquistas
+          selos={conquistas.selos}
+          proxima={conquistas.proxima}
+        />
+      </section>
+    </div>
   )
 }
 
@@ -190,13 +177,14 @@ export function Inicio() {
 
   if (!estado) {
     return (
-      <section className={GRADE}>
-        <div className="flex flex-col gap-6">
+      <div className={PAINEL}>
+        <div className={cn(CARTAO, 'mt-12 flex flex-col gap-3')}>
           <h1 className={TITULO}>Oi!</h1>
-          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-6 w-2/3" />
         </div>
-        <Luv />
-      </section>
+        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-40 w-full" />
+      </div>
     )
   }
 
@@ -210,6 +198,6 @@ export function Inicio() {
   return primeiroUso || indo ? (
     <PrimeiroUso onComecar={() => setIndo(true)} />
   ) : (
-    <BoasVindas progresso={progresso} perdido={perdido} />
+    <Painel progresso={progresso} perdido={perdido} />
   )
 }

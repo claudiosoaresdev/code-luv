@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AULAS } from '@/content/aulas'
 import { concluirAula, definirNome } from '@/lib/progresso/acoes'
@@ -80,7 +80,12 @@ describe('Inicio', () => {
     expect(
       screen.getByRole('link', { name: /Começar a aula/ }),
     ).toHaveAttribute('href', '/aulas/seu-primeiro-html')
-    expect(screen.getByText(`0 de ${AULAS.length}`)).toBeInTheDocument()
+    const totalHtml = AULAS.filter((a) => a.modulo === 'html').length
+    expect(
+      screen.getByRole('img', {
+        name: `HTML: 0 de ${totalHtml} aulas concluídas`,
+      }),
+    ).toBeInTheDocument()
   })
 
   it('tudo concluído: celebra e leva ao site', () => {
@@ -105,8 +110,11 @@ describe('Inicio', () => {
       'href',
       '/meu-site',
     )
+    const totalCss = AULAS.filter((a) => a.modulo === 'css').length
     expect(
-      screen.getByText(`${AULAS.length} de ${AULAS.length}`),
+      screen.getByRole('img', {
+        name: `CSS: ${totalCss} de ${totalCss} aulas concluídas`,
+      }),
     ).toBeInTheDocument()
   })
 
@@ -139,5 +147,79 @@ describe('Inicio', () => {
     render(<Inicio />)
 
     expect(screen.getByText('Continuar: Cores')).toBeInTheDocument()
+  })
+})
+
+describe('Inicio — dashboard', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    esquecerProgressoEmMemoria()
+    vi.useFakeTimers({ toFake: ['Date'] })
+    // quinta-feira, 8 de outubro de 2026
+    vi.setSystemTime(new Date(2026, 9, 8, 10))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('mostra a Luv com os corações, a semana e o progresso', () => {
+    atualizarProgresso((p) => ({
+      ...definirNome(p, 'Ana'),
+      diasEstudados: ['2026-10-05', '2026-10-07'],
+    }))
+    render(<Inicio />)
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Oi, Ana!' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', { name: '2 de 3 corações' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'A Luv guardou dois corações esta semana. Falta um para a sua meta.',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: 'Sua semana' }),
+    ).toHaveTextContent('quinta-feira, hoje')
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Seu progresso' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('2 dias estudados desde o começo.'),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/Próxima:/)).toHaveTextContent('Hello, World')
+  })
+
+  it('usa a meta que ela escolheu', () => {
+    atualizarProgresso((p) => ({
+      ...definirNome(p, 'Ana'),
+      metaSemanal: 5,
+      diasEstudados: ['2026-10-05'],
+    }))
+    render(<Inicio />)
+
+    expect(
+      screen.getByRole('img', { name: '1 de 5 corações' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Você estudou em 1 dia desta semana. Meta: 5 dias por semana.',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('progresso não recuperado: o aviso aparece no dashboard', () => {
+    localStorage.setItem('codeluv:progresso', '{quebrado')
+    render(<Inicio />)
+
+    expect(
+      screen.getByText('Não encontramos seu progresso neste aparelho'),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', { name: '0 de 3 corações' }),
+    ).toBeInTheDocument()
   })
 })
