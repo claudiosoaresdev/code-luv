@@ -1,8 +1,7 @@
 import { Suspense } from 'react'
 
 import { SiteHeader } from '@/components/layout/site-header'
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { SkipLink } from '@/components/layout/skip-link'
 
 // SiteHeader lê o pathname. Com cacheComponents, rotas com parâmetro dinâmico
 // sem generateStaticParams suspendem usePathname — o Suspense mantém o resto
@@ -10,15 +9,7 @@ import { cn } from '@/lib/utils'
 export default function AppLayout({ children }: LayoutProps<'/'>) {
   return (
     <div className="flex min-h-dvh flex-col">
-      <a
-        href="#conteudo"
-        className={cn(
-          buttonVariants(),
-          'sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-20',
-        )}
-      >
-        Pular para o conteúdo
-      </a>
+      <SkipLink />
       <Suspense
         fallback={
           <div className="sticky top-0 z-10 box-content h-16 border-b-2 border-muted bg-background" />
