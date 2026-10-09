@@ -48,7 +48,8 @@ export function documentoDoSite(
 ) {
   const corpo = site.html || htmlDeExemplo
   if (!site.css) return corpo
-  // "</style" dentro do CSS fecharia a tag; para o CSS, "<\/style" é o mesmo texto.
+  // Dentro de uma string do CSS, "<\/style" é o mesmo texto; fora dela,
+  // "</style" já não é CSS válido. Assim o CSS não fecha a tag antes da hora.
   const css = site.css.replace(/<\/style/gi, '<\\/style')
   return `<style>\n${css}\n</style>\n${corpo}`
 }

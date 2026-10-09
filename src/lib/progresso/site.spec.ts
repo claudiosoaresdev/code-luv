@@ -157,6 +157,8 @@ describe('site e caminho', () => {
     expect(
       montarSite(p, aulas, { slug: 'c1', codigo: 'h1 { color: green; }' }).css,
     ).toBe('h1 { color: green; }')
+    // o editor vale mesmo vazio
+    expect(montarSite(p, aulas, { slug: 'c1', codigo: '' }).css).toBe('')
   })
 
   it('o documento põe o CSS num <style> antes do HTML', () => {
