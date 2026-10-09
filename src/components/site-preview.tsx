@@ -9,6 +9,8 @@ type SitePreviewProps = {
   html: string
   /** Nome acessível do iframe. */
   titulo?: string
+  /** id de um texto que explica o site (aria-describedby do iframe). */
+  ariaDescribedBy?: string
   className?: string
 }
 
@@ -16,6 +18,7 @@ type SitePreviewProps = {
 export function SitePreview({
   html,
   titulo = 'Seu site',
+  ariaDescribedBy,
   className,
 }: SitePreviewProps) {
   return (
@@ -23,6 +26,7 @@ export function SitePreview({
       <iframe
         title={titulo}
         srcDoc={html}
+        aria-describedby={ariaDescribedBy}
         sandbox=""
         className={cn('h-64 w-full bg-white', className)}
       />

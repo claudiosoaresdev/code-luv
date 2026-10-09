@@ -9,6 +9,7 @@ import { LuvSays } from '@/components/luv/luv-says'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AULAS, getAula, proximaAula } from '@/content/aulas'
 import { EXPLICACOES } from '@/content/aulas/explicacoes'
+import { getModulo } from '@/content/modulos'
 
 // Com cacheComponents, `dynamicParams` não existe: slugs fora da lista
 // são renderizados sob demanda e caem no notFound() abaixo.
@@ -66,7 +67,7 @@ async function AulaConteudo({
 
   return (
     <>
-      <LessonHeader ordem={aula.ordem} />
+      <LessonHeader ordem={aula.ordem} modulo={getModulo(aula.modulo).nome} />
       <main id="conteudo" tabIndex={-1} className={MAIN_CLASS}>
         <article className="flex max-w-[68ch] flex-col gap-5">
           <h1 className="font-display text-3xl font-bold md:text-4xl">

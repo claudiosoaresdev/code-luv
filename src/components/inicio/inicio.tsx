@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input'
 import { Progress, ProgressLabel } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AULAS } from '@/content/aulas'
+import { getModulo } from '@/content/modulos'
 import { definirNome, pularNome } from '@/lib/progresso/acoes'
 import type { Progresso } from '@/lib/progresso/modelo'
 import { proximaParaEstudar, ultimaConcluida } from '@/lib/progresso/site'
@@ -141,7 +142,7 @@ function BoasVindas({
               <CardDescription>
                 {ultima
                   ? `Na última vez você concluiu “${ultima.titulo}”.`
-                  : `Aula ${proxima.ordem} · cerca de ${proxima.duracaoMin} minutos`}
+                  : `Aula ${proxima.ordem} de ${getModulo(proxima.modulo).nome} · cerca de ${proxima.duracaoMin} minutos`}
               </CardDescription>
             </CardHeader>
             <CardFooter>
@@ -170,7 +171,7 @@ function BoasVindas({
           value={(concluidas / AULAS.length) * 100}
           getAriaValueText={() => `${concluidas} de ${AULAS.length} aulas`}
         >
-          <ProgressLabel>Aulas de HTML</ProgressLabel>
+          <ProgressLabel>Suas aulas</ProgressLabel>
           <span className="ml-auto text-sm text-muted-foreground tabular-nums">
             {concluidas} de {AULAS.length}
           </span>
