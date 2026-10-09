@@ -34,6 +34,7 @@ const PAIRS: [string, string, number, string][] = [
   ['pink-400', 'ink-800', TEXT, 'tags no editor'],
   ['violet-300', 'ink-800', TEXT, 'atributos no editor'],
   ['ink-400', 'ink-800', TEXT, 'comentários no editor'],
+  ['pink-100', 'ink-800', TEXT, 'valores de atributo no editor'],
   // tema claro
   ['ink-950', 'cream-100', TEXT, 'texto principal (claro)'],
   ['ink-600', 'cream-100', TEXT, 'texto de apoio (claro)'],

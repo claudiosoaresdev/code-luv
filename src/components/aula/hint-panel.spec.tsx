@@ -17,6 +17,16 @@ describe('HintPanel', () => {
     expect(screen.queryByText('Pista 1 de 2')).not.toBeInTheDocument()
   })
 
+  it('anuncia a pista com educação (status, não alerta)', async () => {
+    const user = userEvent.setup()
+    render(<HintPanel pistas={PISTAS} solucao={SOLUCAO} />)
+
+    await user.click(screen.getByRole('button', { name: 'Ver pista' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('Pista 1 de 2')
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
   it('abre as pistas uma de cada vez, e só então oferece a solução', async () => {
     const user = userEvent.setup()
     render(<HintPanel pistas={PISTAS} solucao={SOLUCAO} />)
@@ -34,6 +44,9 @@ describe('HintPanel', () => {
 
     await user.click(screen.getByRole('button', { name: 'Ver solução' }))
     expect(screen.getByText(SOLUCAO)).toBeInTheDocument()
+    expect(
+      screen.getByText('Uma solução possível').closest('[tabindex="-1"]'),
+    ).toHaveFocus()
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 })

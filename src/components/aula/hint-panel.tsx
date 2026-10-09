@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { LightbulbIcon } from 'lucide-react'
 
@@ -19,12 +19,18 @@ type HintPanelProps = {
 export function HintPanel({ pistas, solucao }: HintPanelProps) {
   const [abertas, setAbertas] = useState(0)
   const [solucaoAberta, setSolucaoAberta] = useState(false)
+  const solucaoRef = useRef<HTMLDivElement>(null)
   const temMaisPistas = abertas < pistas.length
+
+  // O botão "Ver solução" some ao ser clicado; leva o foco para a solução.
+  useEffect(() => {
+    if (solucaoAberta) solucaoRef.current?.focus()
+  }, [solucaoAberta])
 
   return (
     <div className="flex flex-col gap-3">
       {abertas > 0 && (
-        <Alert variant="warning">
+        <Alert variant="warning" role="status">
           <LightbulbIcon />
           <AlertTitle>
             Pista {abertas} de {pistas.length}
@@ -34,7 +40,11 @@ export function HintPanel({ pistas, solucao }: HintPanelProps) {
       )}
 
       {solucaoAberta && (
-        <div className="flex flex-col gap-2">
+        <div
+          ref={solucaoRef}
+          tabIndex={-1}
+          className="flex flex-col gap-2 outline-none"
+        >
           <p className="text-sm font-semibold">Uma solução possível</p>
           <pre className="overflow-x-auto rounded-lg border-2 border-border bg-popover p-4 font-mono text-sm leading-relaxed">
             {solucao}

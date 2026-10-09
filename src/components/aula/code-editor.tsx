@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 import { html } from '@codemirror/lang-html'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
-import { EditorState } from '@codemirror/state'
+import { Annotation, EditorState } from '@codemirror/state'
 import {
   EditorView,
   highlightActiveLine,
@@ -17,7 +17,11 @@ import { tags } from '@lezer/highlight'
 
 // Cores do código (DS 8.2 — CodeEditor): tags em link (pink.400),
 // atributos em violet.300, valores em rosa-bebê, comentários em ink.400.
-// Todas ≥ 4.5:1 sobre bg-popover (garantido por src/app/tokens.spec.ts).
+// Os contrastes sobre bg-popover são conferidos em src/app/tokens.spec.ts.
+
+// Marca trocas vindas de fora (Recomeçar, Desfazer): não voltam ao pai.
+const externa = Annotation.define<boolean>()
+
 const highlight = HighlightStyle.define([
   { tag: [tags.tagName, tags.angleBracket], color: 'var(--link)' },
   { tag: tags.attributeName, color: 'var(--violet-300)' },
@@ -31,14 +35,15 @@ const theme = EditorView.theme(
       backgroundColor: 'var(--popover)',
       color: 'var(--foreground)',
       fontSize: '15px',
+      minHeight: '10rem',
     },
+    '.cm-scroller': { minHeight: '10rem' },
     '&.cm-focused': { outline: 'none' },
     '.cm-content': {
       fontFamily: 'var(--font-jetbrains), ui-monospace, monospace',
       padding: '12px 0',
       caretColor: 'var(--primary)',
     },
-    '.cm-cursor': { borderLeftColor: 'var(--primary)' },
     '.cm-gutters': {
       backgroundColor: 'var(--popover)',
       color: 'var(--ink-400)',
@@ -47,8 +52,7 @@ const theme = EditorView.theme(
     '.cm-activeLine, .cm-activeLineGutter': {
       backgroundColor: 'var(--accent)',
     },
-    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection':
-      { backgroundColor: 'var(--highlight)' },
+    '.cm-content ::selection': { backgroundColor: 'var(--highlight)' },
   },
   { dark: true },
 )
@@ -90,9 +94,13 @@ export function CodeEditor({ value, onChange, label }: CodeEditorProps) {
           syntaxHighlighting(highlight),
           theme,
           EditorView.lineWrapping,
+          // Lido na montagem: trocar o rótulo depois exige remontar o editor.
           EditorView.contentAttributes.of({ 'aria-label': label }),
           EditorView.updateListener.of((update) => {
-            if (update.docChanged) {
+            if (
+              update.docChanged &&
+              !update.transactions.some((t) => t.annotation(externa))
+            ) {
               onChangeRef.current(update.state.doc.toString())
             }
           }),
@@ -112,6 +120,7 @@ export function CodeEditor({ value, onChange, label }: CodeEditorProps) {
     if (editor && editor.state.doc.toString() !== value) {
       editor.dispatch({
         changes: { from: 0, to: editor.state.doc.length, insert: value },
+        annotations: externa.of(true),
       })
     }
   }, [value])
@@ -119,7 +128,7 @@ export function CodeEditor({ value, onChange, label }: CodeEditorProps) {
   return (
     <div
       ref={host}
-      className="min-h-40 overflow-hidden rounded-lg border-2 border-border focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-ring"
+      className="overflow-hidden rounded-lg border-2 border-border focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-ring"
     />
   )
 }

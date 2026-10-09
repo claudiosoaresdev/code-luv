@@ -34,4 +34,14 @@ describe('LuvSays', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
     expect(screen.getByText('Quase!')).toBeInTheDocument()
   })
+
+  it('na versão herói, também respeita announce false', () => {
+    render(
+      <LuvSays hero announce={false}>
+        Oi
+      </LuvSays>,
+    )
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
 })

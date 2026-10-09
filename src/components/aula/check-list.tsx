@@ -22,7 +22,7 @@ export function CheckList({ itens, resultados }: CheckListProps) {
       {itens.map((descricao, i) => {
         const ok = resultados?.[i]?.ok
         return (
-          <Item key={descricao} variant="outline" role="listitem">
+          <Item key={`${i}-${descricao}`} variant="outline" role="listitem">
             <ItemMedia variant="icon">
               {resultados === null ? (
                 <CircleIcon aria-hidden className="text-muted-foreground" />
@@ -36,7 +36,7 @@ export function CheckList({ itens, resultados }: CheckListProps) {
               <ItemTitle>
                 {descricao}
                 {resultados !== null && (
-                  <span className="font-normal text-muted-foreground">
+                  <span className="font-normal text-foreground">
                     {ok ? ' — certo!' : ' — ainda não'}
                   </span>
                 )}

@@ -31,4 +31,23 @@ describe('ResultPreview', () => {
     })
     expect(frame()).toHaveAttribute('srcdoc', '<h1>Olá</h1>')
   })
+
+  it('uma segunda mudança dentro da janela reinicia a espera', () => {
+    const { rerender } = render(<ResultPreview html="a" />)
+
+    rerender(<ResultPreview html="b" />)
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+    rerender(<ResultPreview html="c" />)
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+    expect(frame()).toHaveAttribute('srcdoc', 'a')
+
+    act(() => {
+      vi.advanceTimersByTime(100)
+    })
+    expect(frame()).toHaveAttribute('srcdoc', 'c')
+  })
 })
