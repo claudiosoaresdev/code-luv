@@ -5,7 +5,7 @@ Documento vivo. Define **a linguagem visual e de interação do CodeLuv**: princ
 > **Regra deste documento:** toda decisão visual é um **token** ou uma **regra nomeada**. Nada de valor solto. Se um valor aparece no produto e não existe aqui, ou ele entra com nome e motivo, ou sai do produto. O teste: **uma pessoa nova deve conseguir montar uma tela coerente usando só este documento**, sem perguntar "qual cor eu uso?".
 
 > **Status:** rascunho completo, aguardando revisão.
-> **Última revisão:** 2026-10-09 · **Responsável:** Claudio Soares · **Versão do design system:** 0.2.1
+> **Última revisão:** 2026-10-09 · **Responsável:** Claudio Soares · **Versão do design system:** 0.2.2
 > **Fonte no design:** [moodboard](./assets/moodboard.webp) e logos em `public/images/` · **Fonte no código:** `src/app/globals.css` (tokens), `src/components/ui/` (base [shadcn/ui](https://ui.shadcn.com), estilo `base-nova` sobre Base UI — DS-09) e `src/components/` (componentes do CodeLuv)
 
 **Documentos relacionados:** [Briefing](./briefing.md) (por que existe) · PRD (o que precisa fazer — a escrever) · Architecture (como é construído — a escrever).
@@ -418,7 +418,7 @@ Estados possíveis: `proposto` · `em construção` · `pronto` · `descontinuad
 
 As variantes `secondary` e `link` do shadcn existem no código, mas não fazem parte do vocabulário do CodeLuv — não usar.
 
-- **Tamanhos (`size`):** `sm` (36, só dentro de painéis densos — mantém área de toque de 48 com margem) · `default` (48) · `lg` (56, chamadas do herói) · `icon` (48×48) · `icon-sm` (36×36, só no cabeçalho).
+- **Tamanhos (`size`):** `sm` (36, só dentro de painéis densos — mantém área de toque de 48 com margem) · `default` (48) · `lg` (56, chamadas do herói) · `icon` (48×48, inclusive no cabeçalho e no botão de fechar de gavetas e diálogos). `icon-sm` (36) não é usado: a área de toque mínima é 48 em todo lugar (5.3, 11).
 - **Links com cara de botão:** `<Link href="…" className={buttonVariants({ variant: 'ghost' })}>`. **Não** usar `<Button nativeButton={false} render={<Link />}>`: o Base UI aplica `role="button"` no `<a>` e o leitor de tela anuncia o link como botão.
 - **Ícone no botão:** `<Icone data-icon="inline-start" />`, sem classes de tamanho.
 
@@ -624,14 +624,17 @@ Não há aplicativo nativo previsto.
 
 ### 13.4 Divergências abertas
 
-| Item                                 | Diverge onde       | Diferença                                                                                                    | Plano                                                                      | Prazo  |
-| ------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ------ |
-| Texto dos botões rosa                | design (moodboard) | moodboard usa texto branco; DS exige texto escuro (DS-02)                                                    | seguir o DS; moodboard é referência de clima, não de regra                 | —      |
-| Recortes da Luv                      | design             | só `ola.png` existe (recortada do logo); os outros 7 estados existem só no moodboard, sem fundo transparente | produzir os recortes em `public/images/luv/`; até lá, todos usam `ola.png` | Fase 1 |
-| Ícones de pixel                      | design             | só existem no moodboard (coração, estrela, planeta, cursor)                                                  | redesenhar em grade 16×16; até lá, Lucide (`HeartIcon`, `SparklesIcon`)    | Fase 1 |
-| Tema claro                           | código             | valores definidos em `:root`, sem seletor                                                                    | implementar com seletor em Configurações                                   | Fase 2 |
-| `gradient.synthwave` e `elevation.3` | código             | definidos aqui, não implementados                                                                            | implementar quando a celebração de módulo e os diálogos forem construídos  | Fase 1 |
-| Rota `/preview`                      | código             | página provisória de validação visual                                                                        | remover no fim do Plano 1                                                  | Fase 1 |
+| Item                                 | Diverge onde       | Diferença                                                                                                    | Plano                                                                                   | Prazo  |
+| ------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------ |
+| Texto dos botões rosa                | design (moodboard) | moodboard usa texto branco; DS exige texto escuro (DS-02)                                                    | seguir o DS; moodboard é referência de clima, não de regra                              | —      |
+| Recortes da Luv                      | design             | só `ola.png` existe (recortada do logo); os outros 7 estados existem só no moodboard, sem fundo transparente | produzir os recortes em `public/images/luv/`; até lá, todos usam `ola.png`              | Fase 1 |
+| Ícones de pixel                      | design             | só existem no moodboard (coração, estrela, planeta, cursor)                                                  | redesenhar em grade 16×16; até lá, Lucide (`HeartIcon`, `SparklesIcon`)                 | Fase 1 |
+| Tema claro                           | código             | valores definidos em `:root`, sem seletor                                                                    | implementar com seletor em Configurações                                                | Fase 2 |
+| `gradient.synthwave` e `elevation.3` | código             | definidos aqui, não implementados                                                                            | implementar quando a celebração de módulo e os diálogos forem construídos               | Fase 1 |
+| Rota `/preview`                      | código             | página provisória de validação visual                                                                        | remover no fim do Plano 1                                                               | Fase 1 |
+| Largura máxima                       | código             | cabeçalho e conteúdo usam `max-w-6xl` (1152px); `layout.max` diz 1200px                                      | alinhar o token ou o documento                                                          | Fase 1 |
+| Camadas de sobreposição              | código             | `Sheet`/`Dialog` do shadcn usam `z-50`; a tabela 3.6 prevê `z.overlay` 30 e `z.modal` 40                     | ajustar a tabela 3.6 aos valores do shadcn (não usar `z-index` manual em sobreposições) | Fase 1 |
+| Link "Pular para o conteúdo"         | código             | não existe; os landmarks bastam para WCAG 2.4.1, mas o link ajuda quem navega por teclado                    | adicionar no layout do app                                                              | Fase 1 |
 
 ---
 
@@ -768,6 +771,7 @@ Não há aplicativo nativo previsto.
 | Data       | O que mudou                                                                                                                                                                             | Quem           |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
 | 2026-10-09 | Primeira versão, a partir do template e do briefing reescrito                                                                                                                           | Claudio Soares |
+| 2026-10-09 | 0.2.2 — área de toque de 48px sem exceção no cabeçalho; divergências da revisão do Plano 1 registradas                                                                                  | Claudio Soares |
 | 2026-10-09 | 0.2.1 — escolhas visuais do Plano 1 registradas (DS-12)                                                                                                                                 | Claudio Soares |
 | 2026-10-09 | 0.2.0 — shadcn/ui como base (DS-09); tokens com nomes do shadcn; `font-display` (DS-10); destaque sem brilho (DS-11); inventário com a base de cada componente; contrastes recalculados | Claudio Soares |
 
