@@ -6,6 +6,8 @@ import { aula as links } from './04-links/aula'
 import { aula as imagens } from './05-imagens/aula'
 import { aula as formularios } from './06-formularios/aula'
 import { aula as secoesERodape } from './07-secoes-e-rodape/aula'
+import { aula as cores } from './css-01-cores/aula'
+import { aula as letras } from './css-02-letras/aula'
 import type { Aula } from './types'
 
 const posicao = (aula: Aula) => MODULOS.findIndex((m) => m.id === aula.modulo)
@@ -24,6 +26,8 @@ export const AULAS: Aula[] = [
   imagens,
   formularios,
   secoesERodape,
+  cores,
+  letras,
 ].sort((a, b) => posicao(a) - posicao(b) || a.ordem - b.ordem)
 
 export function getAula(slug: string) {

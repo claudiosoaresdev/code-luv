@@ -1,0 +1,32 @@
+## A letra do site
+
+A propriedade `font-family` escolhe a letra, que no CSS se chama **fonte**. O valor é o nome da fonte.
+
+Nem todo computador tem as mesmas fontes. Por isso a gente escreve mais de uma, separadas por vírgula. O navegador usa a primeira que encontrar.
+
+No fim da lista, coloque uma família geral: `serif` para letras com pezinho, `sans-serif` para letras sem pezinho.
+
+## O tamanho da letra
+
+A propriedade `font-size` muda o tamanho. Uma boa medida é o `rem`, que vale o tamanho normal da letra da página.
+
+Então `2rem` é o dobro do tamanho normal, e `3rem` é o triplo.
+
+## O espaço entre as linhas
+
+A propriedade `line-height` afasta as linhas umas das outras. Um valor como `1.6` deixa o texto mais arejado e confortável de ler.
+
+## Exemplo
+
+```css
+body {
+  font-family: Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 3rem;
+}
+```
+
+Repare que uma regra pode ter várias propriedades, uma em cada linha.

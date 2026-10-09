@@ -16,4 +16,6 @@ export const EXPLICACOES: Record<
   imagens: () => import('./05-imagens/explicacao.mdx'),
   formularios: () => import('./06-formularios/explicacao.mdx'),
   'secoes-e-rodape': () => import('./07-secoes-e-rodape/explicacao.mdx'),
+  cores: () => import('./css-01-cores/explicacao.mdx'),
+  letras: () => import('./css-02-letras/explicacao.mdx'),
 }
