@@ -19,6 +19,7 @@
   "dependencies": {
     "@base-ui/react": "^1.9.0",
     "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.12",
     "@codemirror/language": "^6.13.1",
     "@codemirror/state": "^6.7.6",
@@ -31,6 +32,7 @@
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "cn": "^0.4.0",
+    "css-tree": "^3.2.1",
     "date-fns": "^4.4.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.5.0",
@@ -55,6 +57,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
+    "@types/css-tree": "^3.2.0",
     "@types/mdx": "^2.0.14",
     "@types/node": "^22.20.5",
     "@types/react": "^19",
