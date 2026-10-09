@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { EstadoAula } from '@/components/aula/estado-aula'
 import {
   Item,
   ItemActions,
@@ -40,7 +41,8 @@ export default function AulasPage() {
                   <ItemTitle>{aula.titulo}</ItemTitle>
                   <ItemDescription>{aula.objetivo}</ItemDescription>
                 </ItemContent>
-                <ItemActions>
+                <ItemActions className="flex-wrap justify-end gap-2">
+                  <EstadoAula slug={aula.slug} />
                   <span className="text-sm text-muted-foreground">
                     cerca de {aula.duracaoMin} min
                   </span>
