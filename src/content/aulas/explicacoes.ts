@@ -20,4 +20,6 @@ export const EXPLICACOES: Record<
   letras: () => import('./css-02-letras/explicacao.mdx'),
   espacamento: () => import('./css-03-espacamento/explicacao.mdx'),
   organizacao: () => import('./css-04-organizacao/explicacao.mdx'),
+  celular: () => import('./css-05-celular/explicacao.mdx'),
+  movimentos: () => import('./css-06-movimentos/explicacao.mdx'),
 }

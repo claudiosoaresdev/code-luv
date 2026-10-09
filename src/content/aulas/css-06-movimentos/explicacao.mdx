@@ -1,0 +1,32 @@
+## Quando o mouse passa por cima
+
+O seletor `a:hover` vale para um link só enquanto o mouse está em cima dele. O `:hover` funciona com qualquer tag.
+
+É um jeito de mostrar que aquilo pode ser clicado.
+
+## Mudar devagar
+
+Sem nada, a cor troca de uma vez. A propriedade `transition` faz a troca acontecer aos poucos.
+
+Ela recebe o nome da propriedade que muda e o tempo. Por exemplo, `color 0.3s` quer dizer que a cor muda em três décimos de segundo.
+
+A `transition` fica na regra normal, e não na regra do hover. Assim a cor muda devagar na ida e na volta.
+
+## Movimento com cuidado
+
+Algumas pessoas passam mal com coisas que se mexem na tela. Prefira movimentos curtos e suaves, como uma troca de cor.
+
+## Exemplo
+
+```css
+a {
+  color: purple;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: deeppink;
+}
+```
+
+Passe o mouse no link do resultado para ver a cor mudar.

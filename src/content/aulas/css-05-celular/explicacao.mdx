@@ -1,0 +1,29 @@
+## Telas de todos os tamanhos
+
+O mesmo site abre num notebook e num celular. No celular, um título enorme ocupa a tela toda, e o espaço das beiradas faz falta.
+
+O CSS pode ter regras que só valem em telas pequenas. Elas ficam dentro de uma **media query**.
+
+## A media query
+
+Ela começa com `@media` e uma condição entre parênteses. A condição `max-width: 400px` quer dizer "telas de até 400 pixels de largura".
+
+Depois vêm chaves, e dentro delas regras normais, com seletor e propriedades.
+
+Repare que ficam duas chaves no fim: uma fecha a regra, e a outra fecha a media query.
+
+## Ver como celular
+
+Acima do resultado da prática existe o botão Ver como celular. Ele deixa o resultado estreito como a tela de um celular, e as regras da media query passam a valer.
+
+## Exemplo
+
+```css
+@media (max-width: 400px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+}
+```
+
+Em telas largas, o título continua grande. Em telas de até 400 pixels, ele fica menor.
