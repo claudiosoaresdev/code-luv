@@ -51,4 +51,15 @@ describe('velocidade', () => {
     salvarVelocidade(1)
     expect(aviso).toHaveBeenCalledTimes(1)
   })
+
+  it('migra a velocidade guardada pelo Plano 3 para o progresso', () => {
+    localStorage.setItem('codeluv:velocidade', '1.25')
+    expect(lerVelocidade()).toBe(1.25)
+
+    salvarVelocidade(0.75)
+    expect(localStorage.getItem('codeluv:velocidade')).toBeNull()
+    expect(
+      JSON.parse(localStorage.getItem('codeluv:progresso')!).velocidade,
+    ).toBe(0.75)
+  })
 })

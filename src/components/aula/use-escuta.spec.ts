@@ -135,7 +135,9 @@ describe('useEscuta', () => {
     act(() => result.current.mudarVelocidade(1.25))
 
     expect(result.current.velocidade).toBe(1.25)
-    expect(localStorage.getItem('codeluv:velocidade')).toBe('1.25')
+    expect(
+      JSON.parse(localStorage.getItem('codeluv:progresso')!).velocidade,
+    ).toBe(1.25)
     expect(synth.faladas.at(-1)).toMatchObject({ text: 'Um.', rate: 1.25 })
   })
 
