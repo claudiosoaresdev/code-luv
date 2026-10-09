@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
+import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
 import { Annotation, EditorState, Transaction } from '@codemirror/state'
@@ -15,17 +16,37 @@ import {
 } from '@codemirror/view'
 import { tags } from '@lezer/highlight'
 
-// Cores do código (DS 8.2 — CodeEditor): tags em link (pink.400),
-// atributos em violet.300, valores em rosa-bebê, comentários em ink.400.
-// Os contrastes sobre bg-popover são conferidos em src/app/tokens.spec.ts.
+// Cores do código (DS 8.2 — CodeEditor): tags e seletores em link (pink.400),
+// atributos e propriedades em violet.300, valores em rosa-bebê, comentários
+// em ink.400. Os contrastes sobre bg-popover e sobre a linha ativa são
+// conferidos em src/app/tokens.spec.ts.
 
 // Marca trocas vindas de fora (Recomeçar, Desfazer): não voltam ao pai.
 const externa = Annotation.define<boolean>()
 
 const highlight = HighlightStyle.define([
-  { tag: [tags.tagName, tags.angleBracket], color: 'var(--link)' },
-  { tag: tags.attributeName, color: 'var(--violet-300)' },
-  { tag: tags.attributeValue, color: 'var(--pink-100)' },
+  {
+    tag: [
+      tags.tagName,
+      tags.angleBracket,
+      tags.className,
+      tags.labelName,
+      tags.definitionKeyword,
+    ],
+    color: 'var(--link)',
+  },
+  { tag: [tags.attributeName, tags.propertyName], color: 'var(--violet-300)' },
+  {
+    tag: [
+      tags.attributeValue,
+      tags.number,
+      tags.unit,
+      tags.atom,
+      tags.color,
+      tags.string,
+    ],
+    color: 'var(--pink-100)',
+  },
   { tag: tags.comment, color: 'var(--ink-400)' },
 ])
 
@@ -64,13 +85,20 @@ type CodeEditorProps = {
   onChange: (value: string) => void
   /** Nome acessível do campo de código. */
   label: string
+  /** Lida na montagem, como o rótulo. */
+  linguagem?: 'html' | 'css'
 }
 
 /**
- * Editor de HTML. Sem fechamento automático de tags (fechar é o que a aula
- * ensina) e sem prender o Tab (quem usa teclado precisa sair do editor).
+ * Editor de HTML ou de CSS. Sem fechamento automático de tags nem de chaves
+ * (fechar é o que a aula ensina) e sem prender o Tab (quem usa teclado precisa sair do editor).
  */
-export function CodeEditor({ value, onChange, label }: CodeEditorProps) {
+export function CodeEditor({
+  value,
+  onChange,
+  label,
+  linguagem = 'html',
+}: CodeEditorProps) {
   const host = useRef<HTMLDivElement>(null)
   const view = useRef<EditorView | null>(null)
   const onChangeRef = useRef(onChange)
@@ -92,7 +120,7 @@ export function CodeEditor({ value, onChange, label }: CodeEditorProps) {
           highlightActiveLineGutter(),
           history(),
           keymap.of([...defaultKeymap, ...historyKeymap]),
-          html({ autoCloseTags: false }),
+          linguagem === 'css' ? css() : html({ autoCloseTags: false }),
           syntaxHighlighting(highlight),
           theme,
           EditorView.lineWrapping,
