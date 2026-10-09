@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { PROGRESSO_VAZIO } from './modelo'
+import { definirMeta } from './acoes'
+import { metaDe, PROGRESSO_VAZIO } from './modelo'
 import {
   apagarProgresso,
   assinarProgresso,
@@ -170,5 +171,16 @@ describe('store do progresso', () => {
     localStorage.setItem('codeluv:velocidade', '1.25')
     apagarProgresso()
     expect(localStorage.getItem('codeluv:velocidade')).toBeNull()
+  })
+
+  it('a meta da semana vai e volta na cópia do progresso', () => {
+    atualizarProgresso((p) => definirMeta(p, 5))
+    const copia = exportarProgresso()
+
+    apagarProgresso()
+    expect(metaDe(obterEstado().progresso)).toBe(3)
+
+    importarProgresso(copia)
+    expect(obterEstado().progresso.metaSemanal).toBe(5)
   })
 })

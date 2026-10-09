@@ -15,7 +15,7 @@ type LuvDaSemanaProps = {
 }
 
 /**
- * Topo do dashboard: a Luv (a única da tela — DS-13), o cumprimento e os
+ * Topo do dashboard: a Luv (a única da tela — uma Luv por tela (DS 8.2, LuvBubble)), o cumprimento e os
  * corações da semana. Os corações só mostram a semana; não desbloqueiam nada.
  */
 export function LuvDaSemana({ nome, estudados, meta }: LuvDaSemanaProps) {
