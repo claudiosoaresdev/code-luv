@@ -37,8 +37,11 @@ const components: MDXComponents = {
       {...props}
     />
   ),
+  // tabIndex: o exemplo pode rolar para o lado, e quem usa teclado precisa
+  // conseguir rolar também.
   pre: (props) => (
     <pre
+      tabIndex={0}
       className="max-w-[68ch] overflow-x-auto rounded-lg border-2 border-border bg-popover p-4 font-mono text-[15px] leading-[1.7] [&_code]:rounded-none [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-[length:inherit]"
       {...props}
     />

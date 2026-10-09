@@ -35,6 +35,12 @@ const PAIRS: [string, string, number, string][] = [
   ['violet-300', 'ink-800', TEXT, 'atributos no editor'],
   ['ink-400', 'ink-800', TEXT, 'comentários no editor'],
   ['pink-100', 'ink-800', TEXT, 'valores de atributo no editor'],
+  // linha ativa do editor (fundo --card = ink-900)
+  ['cream-100', 'ink-900', TEXT, 'texto na linha ativa'],
+  ['pink-400', 'ink-900', TEXT, 'tags na linha ativa'],
+  ['violet-300', 'ink-900', TEXT, 'atributos na linha ativa'],
+  ['ink-400', 'ink-900', TEXT, 'comentários na linha ativa'],
+  ['pink-100', 'ink-900', TEXT, 'valores de atributo na linha ativa'],
   // tema claro
   ['ink-950', 'cream-100', TEXT, 'texto principal (claro)'],
   ['ink-600', 'cream-100', TEXT, 'texto de apoio (claro)'],

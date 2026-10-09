@@ -464,7 +464,7 @@ As variantes `secondary` e `link` do shadcn existem no código, mas não fazem p
 
 - **Para que serve:** escrever código e ver o resultado na hora.
 - **Anatomia:** abas por linguagem (`Tabs`, só as da aula) · área de código (`type.code`, numeração de linhas, fundo `color.bg.surface.raised`) · `RetroWindow` com título "Meu site" contendo o resultado · barra de ações (`Conferir` primary, `Recomeçar` secondary).
-- **Cores do código:** tema de realce próprio, a partir da paleta (tags em `pink.400`, atributos em `violet.300`, textos em `cream.100`, comentários em `ink.400`) — todos ≥ 4.5:1 sobre `color.bg.surface.raised`.
+- **Cores do código:** tema de realce próprio, a partir da paleta (tags em `pink.400`, atributos em `violet.300`, textos em `cream.100`, comentários em `ink.400`) — todos ≥ 4.5:1 sobre `color.bg.surface.raised` e sobre a linha ativa, que usa `color.bg.surface` (`ink.900`), mais escura. Exemplos de código na explicação recebem foco pelo teclado, porque podem rolar para o lado.
 - **Regras:** o resultado **não herda** nenhum estilo do CodeLuv (fundo branco padrão do navegador até a aluna mudar). Erro que impede o resultado: mensagem curta dentro da janela, em `color.feedback.warning`, nunca tela vermelha.
 
 **CheckList** — conferência

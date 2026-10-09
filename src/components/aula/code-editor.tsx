@@ -49,8 +49,10 @@ const theme = EditorView.theme(
       color: 'var(--ink-400)',
       border: 'none',
     },
+    // Mais escura que o fundo do editor: com --accent (ink-700) o
+    // comentário ficava abaixo de 4.5:1.
     '.cm-activeLine, .cm-activeLineGutter': {
-      backgroundColor: 'var(--accent)',
+      backgroundColor: 'var(--card)',
     },
     '.cm-content ::selection': { backgroundColor: 'var(--highlight)' },
   },
