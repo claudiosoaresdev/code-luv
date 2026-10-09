@@ -54,7 +54,7 @@ export function LuvDaSemana({ nome, estudados, meta }: LuvDaSemanaProps) {
                 'grid size-9 place-items-center rounded-lg border-2',
                 i < cheios
                   ? 'border-line-strong bg-primary text-primary-foreground shadow-sticker'
-                  : 'border-muted bg-muted text-muted-foreground',
+                  : 'border-border/50 bg-muted text-muted-foreground',
               )}
             >
               <HeartIcon
