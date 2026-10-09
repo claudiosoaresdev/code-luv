@@ -5,7 +5,7 @@ import { HeartIcon } from 'lucide-react'
 import { falaDaSemana } from '@/lib/progresso/painel'
 import { cn } from '@/lib/utils'
 
-import { CARTAO } from './estilos'
+import { CARTAO, TITULO_PAINEL } from './estilos'
 
 type LuvDaSemanaProps = {
   nome?: string
@@ -36,9 +36,7 @@ export function LuvDaSemana({ nome, estudados, meta }: LuvDaSemanaProps) {
         className="-mt-16 -mb-2 h-auto w-[clamp(140px,30vw,200px)] drop-shadow-[4px_6px_0_var(--chart-2)]"
       />
       <div className="flex min-w-0 flex-1 basis-60 flex-col gap-2 pb-1">
-        <h1 className="font-display text-4xl leading-tight font-extrabold md:text-5xl">
-          {nome ? `Oi, ${nome}!` : 'Oi!'}
-        </h1>
+        <h1 className={TITULO_PAINEL}>{nome ? `Oi, ${nome}!` : 'Oi!'}</h1>
         <p className="text-lg text-muted-foreground">
           {falaDaSemana(estudados, meta)}
         </p>

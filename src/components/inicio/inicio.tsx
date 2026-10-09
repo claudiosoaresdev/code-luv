@@ -28,7 +28,7 @@ import { useProgresso } from '@/lib/progresso/use-progresso'
 import { cn } from '@/lib/utils'
 
 import { ContinuarCard } from './continuar-card'
-import { CARTAO } from './estilos'
+import { CARTAO, TITULO_PAINEL, TITULO_SECAO } from './estilos'
 import { LuvDaSemana } from './luv-da-semana'
 import { MapaDeDias } from './mapa-de-dias'
 import { ProgressoModulos } from './progresso-modulos'
@@ -150,7 +150,7 @@ function Painel({
         aria-labelledby={progressoId}
         className="mt-4 flex flex-col gap-6"
       >
-        <h2 id={progressoId} className="font-display text-2xl font-semibold">
+        <h2 id={progressoId} className={TITULO_SECAO}>
           Seu progresso
         </h2>
         <ProgressoModulos
@@ -177,10 +177,18 @@ export function Inicio() {
 
   if (!estado) {
     return (
-      <div className={PAINEL}>
-        <div className={cn(CARTAO, 'mt-12 flex flex-col gap-3')}>
-          <h1 className={TITULO}>Oi!</h1>
-          <Skeleton className="h-6 w-2/3" />
+      <div className={PAINEL} aria-busy="true">
+        <div
+          className={cn(
+            CARTAO,
+            'mt-12 flex flex-wrap items-end gap-x-6 gap-y-3',
+          )}
+        >
+          <Skeleton className="-mt-16 aspect-[200/210] w-[clamp(140px,30vw,200px)] rounded-2xl" />
+          <div className="flex min-w-0 flex-1 basis-60 flex-col gap-2 pb-1">
+            <h1 className={TITULO_PAINEL}>Oi!</h1>
+            <Skeleton className="h-6 w-2/3" />
+          </div>
         </div>
         <Skeleton className="h-40 w-full" />
         <Skeleton className="h-40 w-full" />
