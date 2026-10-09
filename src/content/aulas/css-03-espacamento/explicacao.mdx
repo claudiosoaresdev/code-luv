@@ -1,0 +1,40 @@
+## Toda tag é uma caixa
+
+Para o CSS, cada tag na página é uma caixa. Até um título ou um parágrafo.
+
+Em volta do conteúdo, a caixa tem três camadas: o espaço de dentro, a borda e o espaço de fora.
+
+## Espaço de dentro e de fora
+
+O `padding` é o espaço de dentro, entre o conteúdo e a borda. Pense na margem branca em volta de uma foto num quadro.
+
+A `margin` é o espaço de fora, que afasta a caixa das vizinhas.
+
+Os dois usam medidas como `16px`. Um pixel é um pontinho da tela.
+
+## Bordas
+
+A propriedade `border` desenha a borda. Ela recebe três valores: a grossura, o estilo e a cor.
+
+Por exemplo, `2px solid purple` é uma borda de dois pixels, contínua e roxa.
+
+A propriedade `border-radius` arredonda os cantos. Quanto maior o número, mais redondo.
+
+## Exemplo
+
+```css
+body {
+  padding: 24px;
+}
+
+img {
+  border-radius: 16px;
+}
+
+form {
+  border: 2px solid purple;
+  padding: 16px;
+}
+```
+
+O formulário ganha uma moldura, e o padding afasta os campos da borda.

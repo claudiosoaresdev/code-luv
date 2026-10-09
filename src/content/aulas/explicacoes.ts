@@ -18,4 +18,6 @@ export const EXPLICACOES: Record<
   'secoes-e-rodape': () => import('./07-secoes-e-rodape/explicacao.mdx'),
   cores: () => import('./css-01-cores/explicacao.mdx'),
   letras: () => import('./css-02-letras/explicacao.mdx'),
+  espacamento: () => import('./css-03-espacamento/explicacao.mdx'),
+  organizacao: () => import('./css-04-organizacao/explicacao.mdx'),
 }

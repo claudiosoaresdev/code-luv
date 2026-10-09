@@ -1,0 +1,29 @@
+## Centralizar o site
+
+Em telas largas, um texto que vai de uma ponta à outra cansa os olhos. A propriedade `max-width` limita a largura de uma caixa.
+
+Com `margin: 0 auto`, a caixa fica no meio. O zero vale para cima e para baixo, e o `auto` divide o espaço que sobra dos lados.
+
+## O flexbox
+
+O **flexbox** é um jeito de organizar as caixas que estão dentro de outra. Ele começa com `display: flex` na caixa de fora.
+
+Com isso, as caixas de dentro ficam lado a lado. Para empilhar, use `flex-direction: column`.
+
+A propriedade `gap` coloca um espaço igual entre elas.
+
+## Exemplo
+
+```css
+body {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+ul {
+  display: flex;
+  gap: 16px;
+}
+```
+
+Neste exemplo, os itens da lista ficam lado a lado, com espaço entre eles.
