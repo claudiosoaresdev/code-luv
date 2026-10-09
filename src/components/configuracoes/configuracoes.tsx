@@ -23,10 +23,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from '@/components/ui/toast'
-import { definirNome, hoje } from '@/lib/progresso/acoes'
+import { definirMeta, definirNome, hoje } from '@/lib/progresso/acoes'
+import { metaDe } from '@/lib/progresso/modelo'
 import {
   apagarProgresso,
   atualizarProgresso,
@@ -51,6 +53,7 @@ function baixarCopia() {
 export function Configuracoes() {
   const estado = useProgresso()
   const nomeId = useId()
+  const metaId = useId()
   const arquivoId = useId()
   const [erroCopia, setErroCopia] = useState<string | null>(null)
   const [confirmando, setConfirmando] = useState(false)
@@ -72,6 +75,12 @@ export function Configuracoes() {
           ? 'Nome salvo'
           : 'Nome removido',
     })
+  }
+
+  function mudarMeta(evento: React.ChangeEvent<HTMLSelectElement>) {
+    const meta = Number(evento.target.value)
+    atualizarProgresso((p) => definirMeta(p, meta))
+    toast.add({ title: 'Meta salva' })
   }
 
   async function recuperar(evento: React.ChangeEvent<HTMLInputElement>) {
@@ -143,6 +152,36 @@ export function Configuracoes() {
             Salvar nome
           </Button>
         </form>
+      </section>
+
+      <Separator />
+
+      <section aria-labelledby="sec-meta" className={SECAO}>
+        <h2 id="sec-meta" className={TITULO}>
+          Meta da semana
+        </h2>
+        <FieldGroup>
+          <Field>
+            <FieldLabel htmlFor={metaId}>
+              Quantos dias por semana você quer estudar?
+            </FieldLabel>
+            <NativeSelect
+              id={metaId}
+              value={metaDe(estado.progresso)}
+              onChange={mudarMeta}
+            >
+              {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+                <NativeSelectOption key={n} value={n}>
+                  {n === 1 ? '1 dia por semana' : `${n} dias por semana`}
+                </NativeSelectOption>
+              ))}
+            </NativeSelect>
+            <FieldDescription>
+              Dá para mudar quando quiser. A semana recomeça toda segunda, sem
+              perder nada.
+            </FieldDescription>
+          </Field>
+        </FieldGroup>
       </section>
 
       <Separator />

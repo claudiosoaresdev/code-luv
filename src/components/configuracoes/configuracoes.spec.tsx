@@ -40,6 +40,21 @@ describe('Configuracoes', () => {
     expect(add).toHaveBeenCalledWith({ title: 'Nome salvo' })
   })
 
+  it('a meta da semana começa em 3 e muda na hora', async () => {
+    const user = userEvent.setup()
+    render(<Configuracoes />)
+
+    const meta = screen.getByLabelText(
+      'Quantos dias por semana você quer estudar?',
+    )
+    expect(meta).toHaveValue('3')
+
+    await user.selectOptions(meta, '5')
+    expect(obterEstado().progresso.metaSemanal).toBe(5)
+    expect(meta).toHaveValue('5')
+    expect(add).toHaveBeenCalledWith({ title: 'Meta salva' })
+  })
+
   it('avisa quando o nome é removido', async () => {
     const user = userEvent.setup()
     atualizarProgresso((p) => definirNome(p, 'Ana'))
