@@ -10,6 +10,12 @@ describe('NAV_ITEMS', () => {
       'Meu site',
       'Conquistas',
     ])
+    expect(NAV_ITEMS.map((item) => item.href)).toEqual([
+      '/',
+      '/aulas',
+      '/meu-site',
+      '/conquistas',
+    ])
   })
 })
 

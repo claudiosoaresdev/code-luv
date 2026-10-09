@@ -17,6 +17,9 @@ type LuvSaysProps = {
  * A Luv falando (DS, seção 8.2 — LuvBubble). Até duas frases, em balão
  * tingido (escolha 3C). role="status" = aria-live="polite": a fala é
  * anunciada sem interromper.
+ * Para falas que aparecem depois de uma ação (incentivo, pista), mantenha um
+ * contêiner role="status" persistente no pai e troque só o conteúdo — regiões
+ * vivas criadas junto com o texto podem não ser anunciadas.
  */
 export function LuvSays({
   state = 'ola',
@@ -37,7 +40,7 @@ export function LuvSays({
           alt=""
           width={240}
           height={240}
-          priority
+          loading="eager"
           className="size-48 rounded-full border-2 border-border shadow-sticker-lg md:size-60"
         />
         {bubble}
