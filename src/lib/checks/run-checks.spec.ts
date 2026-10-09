@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest'
 
 import { runChecks } from './run-checks'
-import type { Check } from './types'
+import type { CheckHtml } from './types'
 
-const existeH1: Check = {
+const existeH1: CheckHtml = {
   tipo: 'existe',
   seletor: 'h1',
   descricao: 'Existe um título',
 }
-const textoH1: Check = {
+const textoH1: CheckHtml = {
   tipo: 'texto',
   seletor: 'h1',
   descricao: 'O título tem texto',
 }
-const doisP: Check = {
+const doisP: CheckHtml = {
   tipo: 'quantidade',
   seletor: 'p',
   minimo: 2,
