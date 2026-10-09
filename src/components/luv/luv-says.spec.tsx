@@ -27,4 +27,11 @@ describe('LuvSays', () => {
     // No jsdom a imagem nunca carrega, então o fallback fica visível.
     expect(screen.getByText('Luv')).toHaveAttribute('aria-hidden', 'true')
   })
+
+  it('não cria região de status quando announce é false', () => {
+    render(<LuvSays announce={false}>Quase!</LuvSays>)
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(screen.getByText('Quase!')).toBeInTheDocument()
+  })
 })

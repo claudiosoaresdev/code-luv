@@ -10,6 +10,11 @@ type LuvSaysProps = {
   state?: LuvState
   /** Ilustração grande (até 240px) com a fala embaixo — herói e celebrações. */
   hero?: boolean
+  /**
+   * false quando o pai já mantém uma região viva (role="status") persistente
+   * e só troca a fala dentro dela.
+   */
+  announce?: boolean
   children: React.ReactNode
 }
 
@@ -24,6 +29,7 @@ type LuvSaysProps = {
 export function LuvSays({
   state = 'ola',
   hero = false,
+  announce = true,
   children,
 }: LuvSaysProps) {
   const bubble = (
@@ -34,7 +40,10 @@ export function LuvSays({
 
   if (hero) {
     return (
-      <div role="status" className="flex flex-col items-center gap-4">
+      <div
+        role={announce ? 'status' : undefined}
+        className="flex flex-col items-center gap-4"
+      >
         <Image
           src={luvImage(state)}
           alt=""
@@ -49,7 +58,7 @@ export function LuvSays({
   }
 
   return (
-    <Message role="status">
+    <Message role={announce ? 'status' : undefined}>
       <MessageAvatar>
         <LuvAvatar state={state} />
       </MessageAvatar>
