@@ -18,9 +18,9 @@ const posicao = (aula: Aula) => MODULOS.findIndex((m) => m.id === aula.modulo)
 
 /**
  * Todas as aulas, por módulo (na ordem de MODULOS) e, dentro dele, por
- * `ordem`. Para acrescentar uma aula: criar a pasta
- * nn-slug/ com aula.ts e explicacao.mdx, importar aqui e registrar o MDX
- * em explicacoes.ts. Este arquivo não importa MDX, para poder ser testado.
+ * `ordem`. Para acrescentar uma aula: criar a pasta (nn-slug/ para HTML,
+ * css-nn-slug/ para CSS) com aula.ts e explicacao.mdx, usando um `modulo`
+ * que exista em MODULOS, importar aqui e registrar o MDX em explicacoes.ts. Este arquivo não importa MDX, para poder ser testado.
  */
 export const AULAS: Aula[] = [
   seuPrimeiroHtml,

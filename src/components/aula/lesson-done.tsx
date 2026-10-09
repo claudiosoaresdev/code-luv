@@ -27,6 +27,7 @@ export function LessonDone({
   aviso,
 }: LessonDoneProps) {
   const tituloId = useId()
+  const avisoId = useId()
   const heading = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
@@ -46,8 +47,15 @@ export function LessonDone({
       <p className="text-lg">
         Seu site ganhou uma parte nova: <strong>{titulo}</strong>.
       </p>
-      <SitePreview html={siteHtml} />
-      {aviso && <p className="text-base text-muted-foreground">{aviso}</p>}
+      {aviso && (
+        <p id={avisoId} className="text-base text-muted-foreground">
+          {aviso}
+        </p>
+      )}
+      <SitePreview
+        html={siteHtml}
+        ariaDescribedBy={aviso ? avisoId : undefined}
+      />
       <div className="flex flex-wrap gap-3">
         {proxima && (
           <Link

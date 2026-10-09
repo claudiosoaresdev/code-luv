@@ -54,6 +54,21 @@ export function documentoDoSite(
   return `<style>\n${css}\n</style>\n${corpo}`
 }
 
+/**
+ * O que o iframe mostra: o documento do site e se ele usa o HTML de exemplo
+ * (a aluna ainda não tem HTML). O exemplo vem de fora para lib não depender
+ * do conteúdo.
+ */
+export function siteParaMostrar(
+  site: { html: string; css: string },
+  htmlDeExemplo: string,
+) {
+  return {
+    documento: documentoDoSite(site, htmlDeExemplo),
+    usaExemplo: site.html === '',
+  }
+}
+
 export function proximaParaEstudar(p: Progresso, aulas: Aula[]) {
   return aulas.find((aula) => !concluida(p, aula))
 }

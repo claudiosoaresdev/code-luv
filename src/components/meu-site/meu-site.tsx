@@ -8,7 +8,7 @@ import { AVISO_SITE_DE_EXEMPLO, SitePreview } from '@/components/site-preview'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AULAS, siteDeExemplo } from '@/content/aulas'
 import { getModulo } from '@/content/modulos'
-import { documentoDoSite, montarSite } from '@/lib/progresso/site'
+import { montarSite, siteParaMostrar } from '@/lib/progresso/site'
 import { useProgresso } from '@/lib/progresso/use-progresso'
 
 /** HU-07: o site que a aluna está construindo, parte por parte. */
@@ -20,6 +20,7 @@ export function MeuSite() {
 
   const site = montarSite(estado.progresso, AULAS)
   const { partes } = site
+  const { documento, usaExemplo } = siteParaMostrar(site, siteDeExemplo())
   if (partes.length === 0) {
     return (
       <EmptyState
@@ -32,14 +33,14 @@ export function MeuSite() {
 
   return (
     <div className="flex flex-col gap-8">
-      {site.html === '' && (
+      {usaExemplo && (
         <p id={avisoId} className="text-base text-muted-foreground">
           {AVISO_SITE_DE_EXEMPLO}
         </p>
       )}
       <SitePreview
-        html={documentoDoSite(site, siteDeExemplo())}
-        ariaDescribedBy={site.html === '' ? avisoId : undefined}
+        html={documento}
+        ariaDescribedBy={usaExemplo ? avisoId : undefined}
         className="h-[60vh]"
       />
       <section aria-labelledby={partesId} className="flex flex-col gap-3">

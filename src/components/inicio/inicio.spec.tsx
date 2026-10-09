@@ -122,4 +122,22 @@ describe('Inicio', () => {
       '/configuracoes',
     )
   })
+
+  it('terminou o HTML: segue para a primeira aula de CSS', () => {
+    atualizarProgresso((p) =>
+      AULAS.filter((aula) => aula.modulo === 'html').reduce(
+        (feito, aula) =>
+          concluirAula(
+            feito,
+            aula.slug,
+            '2026-10-09T20:00:00.000Z',
+            '2026-10-09',
+          ),
+        definirNome(p, 'Ana'),
+      ),
+    )
+    render(<Inicio />)
+
+    expect(screen.getByText('Continuar: Cores')).toBeInTheDocument()
+  })
 })

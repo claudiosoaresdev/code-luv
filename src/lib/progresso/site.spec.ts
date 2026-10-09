@@ -8,6 +8,7 @@ import {
   documentoDoSite,
   montarSite,
   proximaParaEstudar,
+  siteParaMostrar,
   ultimaConcluida,
 } from './site'
 
@@ -185,5 +186,24 @@ describe('site e caminho', () => {
     expect(doc).toBe(
       '<style>\np {} <\\/style><h1>fora</h1>\n</style>\n<p>oi</p>',
     )
+  })
+
+  it('sem HTML, siteParaMostrar usa o exemplo e avisa', () => {
+    const { documento, usaExemplo } = siteParaMostrar(
+      { html: '', css: 'h1 {}' },
+      '<h1>Exemplo</h1>',
+    )
+    expect(usaExemplo).toBe(true)
+    expect(documento).toContain('<h1>Exemplo</h1>')
+  })
+
+  it('com HTML, siteParaMostrar não usa o exemplo', () => {
+    const { documento, usaExemplo } = siteParaMostrar(
+      { html: '<h1>Meu</h1>', css: '' },
+      '<h1>Exemplo</h1>',
+    )
+    expect(usaExemplo).toBe(false)
+    expect(documento).toBe('<h1>Meu</h1>')
+    expect(documento).not.toContain('Exemplo')
   })
 })

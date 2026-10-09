@@ -40,12 +40,16 @@ describe('registro de aulas', () => {
     expect(getAula('nao-existe')).toBeUndefined()
   })
 
+  it('a próxima aula da última de HTML é a primeira de CSS', () => {
+    expect(proximaAula('secoes-e-rodape')?.slug).toBe('cores')
+  })
+
   it('não tem próxima aula depois da última, nem para slug desconhecido', () => {
     expect(proximaAula(AULAS[AULAS.length - 1].slug)).toBeUndefined()
     expect(proximaAula('nao-existe')).toBeUndefined()
   })
 
-  describe.each(AULAS)('aula $ordem — $titulo', (aula) => {
+  describe.each(AULAS)('$modulo $ordem — $titulo', (aula) => {
     it('a solução passa em toda a conferência', () => {
       const resultados = conferir(aula, aula.pratica.solucao)
       expect(resultados.filter((r) => !r.ok)).toEqual([])

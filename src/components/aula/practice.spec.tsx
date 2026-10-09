@@ -315,6 +315,9 @@ describe('Practice — aula de CSS', () => {
     expect(screen.getByTitle('Seu site').getAttribute('srcdoc')).toContain(
       '<style>',
     )
+    expect(screen.getByTitle('Seu site')).toHaveAccessibleDescription(
+      /site de exemplo/,
+    )
   })
 
   it('com HTML concluído, o CSS aparece no site dela', () => {

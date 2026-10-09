@@ -20,7 +20,7 @@ import {
 } from '@/lib/progresso/acoes'
 import { type Conquista, registrarConquistas } from '@/lib/progresso/conquistas'
 import { PROGRESSO_VAZIO } from '@/lib/progresso/modelo'
-import { documentoDoSite, montarSite } from '@/lib/progresso/site'
+import { montarSite, siteParaMostrar } from '@/lib/progresso/site'
 import { atualizarProgresso } from '@/lib/progresso/store'
 import { useProgresso } from '@/lib/progresso/use-progresso'
 
@@ -120,23 +120,25 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
 
   // Aula de CSS: o resultado é o site inteiro, com o CSS do editor no lugar
   // desta aula. Sem HTML concluído, o CSS aparece no site de exemplo.
-  const siteEmEdicao =
+  const resultado =
     aula.modulo === 'css'
-      ? montarSite(progresso, AULAS, { slug: aula.slug, codigo })
-      : null
-  const usaExemplo = siteEmEdicao !== null && siteEmEdicao.html === ''
-  const documento = siteEmEdicao
-    ? documentoDoSite(siteEmEdicao, siteDeExemplo())
-    : codigo
+      ? siteParaMostrar(
+          montarSite(progresso, AULAS, { slug: aula.slug, codigo }),
+          siteDeExemplo(),
+        )
+      : { documento: codigo, usaExemplo: false }
 
   if (concluida) {
-    const siteConcluido = montarSite(progresso, AULAS)
+    const siteConcluido = siteParaMostrar(
+      montarSite(progresso, AULAS),
+      siteDeExemplo(),
+    )
     return (
       <LessonDone
         titulo={aula.titulo}
         proxima={proxima}
-        siteHtml={documentoDoSite(siteConcluido, siteDeExemplo())}
-        aviso={siteConcluido.html === '' ? AVISO_SITE_DE_EXEMPLO : undefined}
+        siteHtml={siteConcluido.documento}
+        aviso={siteConcluido.usaExemplo ? AVISO_SITE_DE_EXEMPLO : undefined}
       />
     )
   }
@@ -170,15 +172,15 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
         label={`Seu código ${modulo.nome}`}
         linguagem={aula.modulo}
       />
-      {usaExemplo && (
+      {resultado.usaExemplo && (
         <p id={avisoId} className="text-sm text-muted-foreground">
           {AVISO_SITE_DE_EXEMPLO}
         </p>
       )}
       <ResultPreview
-        html={documento}
+        html={resultado.documento}
         podeVerComoCelular={aula.modulo === 'css'}
-        ariaDescribedBy={usaExemplo ? avisoId : undefined}
+        ariaDescribedBy={resultado.usaExemplo ? avisoId : undefined}
         className={aula.modulo === 'css' ? 'h-96' : undefined}
       />
 
