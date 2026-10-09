@@ -2,13 +2,15 @@
 
 import { useId, useState } from 'react'
 
+import { AVISO_SITE_DE_EXEMPLO } from '@/components/site-preview'
 import { Badge } from '@/components/ui/badge'
 import { Bubble, BubbleContent } from '@/components/ui/bubble'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
-import { AULAS } from '@/content/aulas'
+import { AULAS, siteDeExemplo } from '@/content/aulas'
 import type { Aula } from '@/content/aulas/types'
-import { conferir as conferirAula } from '@/lib/checks/conferir'
+import { getModulo } from '@/content/modulos'
+import { conferir } from '@/lib/checks/conferir'
 import type { CheckResult } from '@/lib/checks/types'
 import {
   concluirAula,
@@ -18,7 +20,7 @@ import {
 } from '@/lib/progresso/acoes'
 import { type Conquista, registrarConquistas } from '@/lib/progresso/conquistas'
 import { PROGRESSO_VAZIO } from '@/lib/progresso/modelo'
-import { montarSite } from '@/lib/progresso/site'
+import { documentoDoSite, montarSite } from '@/lib/progresso/site'
 import { atualizarProgresso } from '@/lib/progresso/store'
 import { useProgresso } from '@/lib/progresso/use-progresso'
 
@@ -45,10 +47,12 @@ function falaDaLuv(faltam: number) {
 /**
  * Prática da aula (DS 9 — Estrutura da aula, Conferência e pistas,
  * Conclusão de aula, Desfazer). Código, conferências e conclusão ficam no
- * progresso da aluna (Plano 4).
+ * progresso da aluna (Plano 4). Nas aulas de CSS, o resultado é o site
+ * inteiro com o CSS do editor (Plano 5).
  */
 export function Practice({ aula, proxima, id }: PracticeProps) {
   const { pratica } = aula
+  const modulo = getModulo(aula.modulo)
   const tituloId = useId()
   const ajudaId = useId()
   const estado = useProgresso()
@@ -71,8 +75,8 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
     atualizarProgresso((p) => salvarCodigo(p, aula.slug, novo))
   }
 
-  function conferir() {
-    const novos = conferirAula(aula, codigo)
+  function conferirPratica() {
+    const novos = conferir(aula, codigo)
     setResultados(novos)
     atualizarProgresso((p) => registrarConferencia(p, aula.slug, hoje()))
     if (novos.some((r) => !r.ok)) setMostrarPistas(true)
@@ -113,12 +117,26 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
     }
   }
 
+  // Aula de CSS: o resultado é o site inteiro, com o CSS do editor no lugar
+  // desta aula. Sem HTML concluído, o CSS aparece no site de exemplo.
+  const siteEmEdicao =
+    aula.modulo === 'css'
+      ? montarSite(progresso, AULAS, { slug: aula.slug, codigo })
+      : null
+  const usaExemplo = siteEmEdicao !== null && siteEmEdicao.html === ''
+  const documento = siteEmEdicao
+    ? documentoDoSite(siteEmEdicao, siteDeExemplo())
+    : codigo
+
   if (concluida) {
     return (
       <LessonDone
         titulo={aula.titulo}
         proxima={proxima}
-        siteHtml={montarSite(progresso, AULAS).html}
+        siteHtml={documentoDoSite(
+          montarSite(progresso, AULAS),
+          siteDeExemplo(),
+        )}
       />
     )
   }
@@ -149,12 +167,23 @@ export function Practice({ aula, proxima, id }: PracticeProps) {
       <CodeEditor
         value={codigo}
         onChange={mudarCodigo}
-        label="Seu código HTML"
+        label={`Seu código ${modulo.nome}`}
+        linguagem={aula.modulo}
       />
-      <ResultPreview html={codigo} />
+      {usaExemplo && (
+        <p className="text-sm text-muted-foreground">{AVISO_SITE_DE_EXEMPLO}</p>
+      )}
+      <ResultPreview
+        html={documento}
+        podeVerComoCelular={aula.modulo === 'css'}
+        className={aula.modulo === 'css' ? 'h-96' : undefined}
+      />
 
       <div className="flex flex-wrap gap-3">
-        <Button variant={tudoCerto ? 'outline' : 'default'} onClick={conferir}>
+        <Button
+          variant={tudoCerto ? 'outline' : 'default'}
+          onClick={conferirPratica}
+        >
           Conferir
         </Button>
         <Button variant="outline" onClick={recomecar}>

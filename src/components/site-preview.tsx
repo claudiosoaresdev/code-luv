@@ -1,6 +1,10 @@
 import { RetroWindow } from '@/components/retro-window'
 import { cn } from '@/lib/utils'
 
+/** Mostrado quando o CSS aparece no site de exemplo (a aluna ainda não tem HTML). */
+export const AVISO_SITE_DE_EXEMPLO =
+  'Você ainda não tem partes de HTML no seu site, então o CSS aparece num site de exemplo. Quando concluir aulas de HTML, ele vira o seu.'
+
 type SitePreviewProps = {
   html: string
   /** Nome acessível do iframe. */

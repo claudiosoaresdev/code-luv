@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { aula } from '@/content/aulas/01-seu-primeiro-html/aula'
-import { salvarCodigo } from '@/lib/progresso/acoes'
+import { aula as cores } from '@/content/aulas/css-01-cores/aula'
+import { concluirAula, salvarCodigo } from '@/lib/progresso/acoes'
 import {
   atualizarProgresso,
   esquecerProgressoEmMemoria,
@@ -249,5 +250,66 @@ describe('Practice', () => {
       expect.objectContaining({ title: 'Conquista: Hello, World' }),
     )
     expect(obterEstado().progresso.aulas[aula.slug].concluidaEm).toBeDefined()
+  })
+})
+
+describe('Practice — aula de CSS', () => {
+  beforeEach(() => {
+    add.mockClear()
+    localStorage.clear()
+    esquecerProgressoEmMemoria()
+  })
+
+  const editorCss = () =>
+    screen.getByRole('textbox', { name: 'Seu código CSS' })
+  const documento = () =>
+    screen.getByTitle('Resultado do seu código').getAttribute('srcdoc') ?? ''
+
+  it('tem editor de CSS, "Ver como celular" e mostra o site de exemplo', () => {
+    render(<Practice aula={cores} />)
+
+    expect(editorCss()).toHaveValue(cores.pratica.inicial)
+    expect(
+      screen.getByRole('button', { name: 'Ver como celular' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/site de exemplo/)).toBeInTheDocument()
+    expect(documento()).toContain('<style>')
+    expect(documento()).toContain(cores.pratica.inicial.trim())
+    expect(documento()).toContain('<h1>Olá, eu sou a Ana</h1>')
+  })
+
+  it('com HTML concluído, o CSS aparece no site dela', () => {
+    atualizarProgresso((p) =>
+      concluirAula(
+        salvarCodigo(p, 'seu-primeiro-html', '<h1>Site da Bia</h1>'),
+        'seu-primeiro-html',
+        '2026-10-09T20:00:00.000Z',
+        '2026-10-09',
+      ),
+    )
+    render(<Practice aula={cores} />)
+
+    expect(documento()).toContain('<h1>Site da Bia</h1>')
+    expect(documento()).not.toContain('Olá, eu sou a Ana')
+    expect(screen.queryByText(/site de exemplo/)).not.toBeInTheDocument()
+  })
+
+  it('confere as regras de CSS', async () => {
+    const user = userEvent.setup()
+    render(<Practice aula={cores} />)
+
+    fireEvent.change(editorCss(), { target: { value: 'h1 { color: red; }' } })
+    await user.click(screen.getByRole('button', { name: 'Conferir' }))
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent(
+      'Quase! Faltam 2 itens. Quer uma pista?',
+    )
+
+    fireEvent.change(editorCss(), {
+      target: { value: cores.pratica.solucao },
+    })
+    await user.click(screen.getByRole('button', { name: 'Conferir' }))
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent(
+      'Funcionou! Agora é só concluir a aula.',
+    )
   })
 })
