@@ -243,9 +243,10 @@ Expected: PASS, `6 passed`.
 
 - [ ] **Step 5: Escrever o teste dos tokens**
 
-`src/app/tokens.spec.ts`:
+`src/app/tokens.spec.ts` (roda no ambiente `node`: no jsdom, `import.meta.url` não é uma URL `file:`):
 
 ```ts
+// @vitest-environment node
 import { readFileSync } from 'node:fs'
 
 import { describe, expect, it } from 'vitest'
