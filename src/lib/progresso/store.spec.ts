@@ -144,4 +144,14 @@ describe('store do progresso', () => {
     expect(importarProgresso(copia)).toBe(true)
     expect(obterEstado().progresso.nome).toBe('Bia')
   })
+
+  it('apagar também remove a cópia do que não deu para ler', () => {
+    localStorage.setItem('codeluv:progresso', '{isto não é json')
+    atualizarProgresso((p) => ({ ...p, nome: 'Ana' }))
+    expect(localStorage.getItem('codeluv:progresso:recuperacao')).not.toBeNull()
+
+    apagarProgresso()
+
+    expect(localStorage.getItem('codeluv:progresso:recuperacao')).toBeNull()
+  })
 })

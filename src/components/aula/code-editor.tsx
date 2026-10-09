@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 import { html } from '@codemirror/lang-html'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
-import { Annotation, EditorState } from '@codemirror/state'
+import { Annotation, EditorState, Transaction } from '@codemirror/state'
 import {
   EditorView,
   highlightActiveLine,
@@ -120,7 +120,7 @@ export function CodeEditor({ value, onChange, label }: CodeEditorProps) {
     if (editor && editor.state.doc.toString() !== value) {
       editor.dispatch({
         changes: { from: 0, to: editor.state.doc.length, insert: value },
-        annotations: externa.of(true),
+        annotations: [externa.of(true), Transaction.addToHistory.of(false)],
       })
     }
   }, [value])

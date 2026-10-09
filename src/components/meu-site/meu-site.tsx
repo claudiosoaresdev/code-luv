@@ -1,5 +1,6 @@
 'use client'
 
+import { useId } from 'react'
 import Link from 'next/link'
 
 import { EmptyState } from '@/components/empty-state'
@@ -12,6 +13,7 @@ import { useProgresso } from '@/lib/progresso/use-progresso'
 /** HU-07: o site que a aluna está construindo, parte por parte. */
 export function MeuSite() {
   const estado = useProgresso()
+  const partesId = useId()
   if (!estado) return <Skeleton className="h-96 w-full" />
 
   const { html, partes } = montarSite(estado.progresso, AULAS)
@@ -28,11 +30,11 @@ export function MeuSite() {
   return (
     <div className="flex flex-col gap-8">
       <SitePreview html={html} className="h-[60vh]" />
-      <section aria-labelledby="partes" className="flex flex-col gap-3">
-        <h2 id="partes" className="font-display text-2xl font-semibold">
+      <section aria-labelledby={partesId} className="flex flex-col gap-3">
+        <h2 id={partesId} className="font-display text-2xl font-semibold">
           Partes do seu site
         </h2>
-        <ol className="flex list-decimal flex-col gap-2 pl-6 text-lg">
+        <ol className="flex list-none flex-col gap-2 pl-0 text-lg">
           {partes.map((parte) => {
             const ordem = AULAS.find((a) => a.slug === parte.slug)?.ordem
             return (

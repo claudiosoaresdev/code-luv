@@ -1,6 +1,6 @@
 'use client'
 
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -28,7 +28,8 @@ import { atualizarProgresso } from '@/lib/progresso/store'
 import { useProgresso } from '@/lib/progresso/use-progresso'
 
 const TITULO = 'font-display text-4xl leading-tight font-extrabold md:text-6xl'
-const GRADE = 'grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]'
+const GRADE =
+  'grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1.2fr_1fr]'
 
 function Luv() {
   return (
@@ -39,13 +40,14 @@ function Luv() {
 }
 
 /** DS 9 — Primeiro uso: a Luv, o combinado e um único caminho (nome opcional). */
-function PrimeiroUso() {
+function PrimeiroUso({ onComecar }: { onComecar: () => void }) {
   const router = useRouter()
   const nomeId = useId()
   const primeira = AULAS[0]
 
   function comecar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault()
+    onComecar()
     const nome = new FormData(evento.currentTarget).get('nome')
     atualizarProgresso((p) =>
       definirNome(p, typeof nome === 'string' ? nome : ''),
@@ -54,6 +56,7 @@ function PrimeiroUso() {
   }
 
   function pular() {
+    onComecar()
     atualizarProgresso(pularNome)
     router.push(`/aulas/${primeira.slug}`)
   }
@@ -163,7 +166,10 @@ function BoasVindas({
           </div>
         )}
 
-        <Progress value={(concluidas / AULAS.length) * 100}>
+        <Progress
+          value={(concluidas / AULAS.length) * 100}
+          getAriaValueText={() => `${concluidas} de ${AULAS.length} aulas`}
+        >
           <ProgressLabel>Aulas de HTML</ProgressLabel>
           <span className="ml-auto text-sm text-muted-foreground tabular-nums">
             {concluidas} de {AULAS.length}
@@ -177,6 +183,9 @@ function BoasVindas({
 
 export function Inicio() {
   const estado = useProgresso()
+  // Gravar o nome muda o progresso antes de a rota trocar: segue na tela de
+  // primeiro uso até a navegação terminar, para o título não piscar.
+  const [indo, setIndo] = useState(false)
 
   if (!estado) {
     return (
@@ -185,6 +194,7 @@ export function Inicio() {
           <h1 className={TITULO}>Oi!</h1>
           <Skeleton className="h-32 w-full" />
         </div>
+        <Luv />
       </section>
     )
   }
@@ -196,8 +206,8 @@ export function Inicio() {
     !progresso.nomePulado &&
     Object.keys(progresso.aulas).length === 0
 
-  return primeiroUso ? (
-    <PrimeiroUso />
+  return primeiroUso || indo ? (
+    <PrimeiroUso onComecar={() => setIndo(true)} />
   ) : (
     <BoasVindas progresso={progresso} perdido={perdido} />
   )

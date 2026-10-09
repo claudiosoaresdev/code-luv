@@ -40,6 +40,23 @@ describe('Inicio', () => {
     expect(push).toHaveBeenCalledWith('/aulas/seu-primeiro-html')
   })
 
+  it('primeiro uso: continua na tela enquanto navega, sem trocar o título', async () => {
+    const user = userEvent.setup()
+    render(<Inicio />)
+
+    await user.type(
+      screen.getByLabelText('Como você quer ser chamada? (opcional)'),
+      'Ana',
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Começar a primeira aula' }),
+    )
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Oi!' }),
+    ).toBeInTheDocument()
+  })
+
   it('primeiro uso: pular também leva à primeira aula, sem nome', async () => {
     const user = userEvent.setup()
     render(<Inicio />)

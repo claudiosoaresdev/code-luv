@@ -33,7 +33,7 @@ export function ListaConquistas() {
           const ganha = conquistas[conquista.id]
           return (
             <li key={conquista.id}>
-              <Card className={ganha ? 'border-line-strong' : 'opacity-80'}>
+              <Card className={ganha ? 'border-line-strong' : 'border-dashed'}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     {ganha ? (
@@ -41,7 +41,7 @@ export function ListaConquistas() {
                     ) : (
                       <LockIcon aria-hidden className="text-muted-foreground" />
                     )}
-                    {conquista.titulo}
+                    <h2 className="contents">{conquista.titulo}</h2>
                   </CardTitle>
                   <CardDescription>
                     {ganha

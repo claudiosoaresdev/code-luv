@@ -91,6 +91,7 @@ export function atualizarProgresso(mudar: (atual: Progresso) => Progresso) {
 export function apagarProgresso() {
   try {
     localStorage.removeItem(CHAVE)
+    localStorage.removeItem(CHAVE_RECUPERACAO)
   } catch {
     // Sem armazenamento: só a memória é limpa.
   }

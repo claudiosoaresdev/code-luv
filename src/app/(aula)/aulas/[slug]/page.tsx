@@ -80,6 +80,7 @@ async function AulaConteudo({
           </Escuta>
         </article>
         <Practice
+          key={slug}
           id="pratica"
           aula={aula}
           proxima={proxima && { slug: proxima.slug, titulo: proxima.titulo }}

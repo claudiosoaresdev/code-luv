@@ -2,7 +2,7 @@
 
 import { useId, useRef, useState } from 'react'
 
-import { DownloadIcon } from 'lucide-react'
+import { CircleAlertIcon, DownloadIcon } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -45,7 +45,7 @@ function baixarCopia() {
   link.href = url
   link.download = `codeluv-progresso-${hoje()}.json`
   link.click()
-  URL.revokeObjectURL(url)
+  setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
 export function Configuracoes() {
@@ -54,6 +54,8 @@ export function Configuracoes() {
   const arquivoId = useId()
   const [erroCopia, setErroCopia] = useState<string | null>(null)
   const [confirmando, setConfirmando] = useState(false)
+  // Recomeça o formulário do nome só quando o progresso é trocado de fora (importar, apagar).
+  const [versaoForm, setVersaoForm] = useState(0)
   const cancelar = useRef<HTMLButtonElement>(null)
 
   if (!estado) return <Skeleton className="h-96 w-full" />
@@ -64,16 +66,46 @@ export function Configuracoes() {
     atualizarProgresso((p) =>
       definirNome(p, typeof nome === 'string' ? nome : ''),
     )
-    toast.add({ title: 'Nome salvo' })
+    toast.add({
+      title:
+        typeof nome === 'string' && nome.trim()
+          ? 'Nome salvo'
+          : 'Nome removido',
+    })
   }
 
   async function recuperar(evento: React.ChangeEvent<HTMLInputElement>) {
     const arquivo = evento.target.files?.[0]
     evento.target.value = ''
     if (!arquivo) return
-    if (importarProgresso(await arquivo.text())) {
+    if (arquivo.size > 1_000_000) {
+      setErroCopia(
+        'Esse arquivo é grande demais para ser uma cópia do CodeLuv.',
+      )
+      return
+    }
+    let texto: string
+    try {
+      texto = await arquivo.text()
+    } catch {
+      setErroCopia('Não deu para ler esse arquivo.')
+      return
+    }
+    const anterior = exportarProgresso()
+    if (importarProgresso(texto)) {
       setErroCopia(null)
-      toast.add({ title: 'Progresso recuperado' })
+      setVersaoForm((v) => v + 1)
+      toast.add({
+        title: 'Progresso recuperado',
+        timeout: 6000,
+        actionProps: {
+          children: 'Desfazer',
+          onClick: () => {
+            importarProgresso(anterior)
+            setVersaoForm((v) => v + 1)
+          },
+        },
+      })
     } else {
       setErroCopia('Esse arquivo não parece uma cópia do CodeLuv.')
     }
@@ -81,6 +113,7 @@ export function Configuracoes() {
 
   function apagar() {
     apagarProgresso()
+    setVersaoForm((v) => v + 1)
     setConfirmando(false)
     toast.add({ title: 'Progresso apagado' })
   }
@@ -91,12 +124,7 @@ export function Configuracoes() {
         <h2 id="sec-nome" className={TITULO}>
           Seu nome
         </h2>
-        {/* key: o campo recomeça com o nome guardado quando ele muda */}
-        <form
-          key={estado.progresso.nome ?? ''}
-          onSubmit={salvarNome}
-          className={SECAO}
-        >
+        <form key={versaoForm} onSubmit={salvarNome} className={SECAO}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor={nomeId}>
@@ -145,7 +173,12 @@ export function Configuracoes() {
               Escolha o arquivo que você baixou. Ele substitui o progresso deste
               aparelho.
             </FieldDescription>
-            {erroCopia && <FieldError>{erroCopia}</FieldError>}
+            {erroCopia && (
+              <FieldError>
+                <CircleAlertIcon aria-hidden data-icon="inline-start" />{' '}
+                {erroCopia}
+              </FieldError>
+            )}
           </Field>
         </FieldGroup>
       </section>
