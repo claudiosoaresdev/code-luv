@@ -53,6 +53,9 @@ describe('runChecks', () => {
   it('não executa scripts do código da aluna', () => {
     ;(window as unknown as { pwned?: boolean }).pwned = false
     runChecks('<script>window.pwned = true</script><h1>Oi</h1>', [existeH1])
+    runChecks('<img src="x" onerror="window.pwned = true"><h1>Oi</h1>', [
+      existeH1,
+    ])
     expect((window as unknown as { pwned?: boolean }).pwned).toBe(false)
   })
 })
