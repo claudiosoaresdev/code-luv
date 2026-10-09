@@ -97,4 +97,22 @@ describe('SiteHeader', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
     )
   })
+
+  it('mostra dica ao passar o mouse em Configurações, que segue sendo link', async () => {
+    const user = userEvent.setup()
+    render(<SiteHeader />)
+
+    const link = screen.getByRole('link', { name: 'Configurações' })
+    expect(link).toHaveAttribute('href', '/configuracoes')
+    expect(link).not.toHaveAttribute('role')
+
+    await user.hover(link)
+
+    const tip = await waitFor(() => {
+      const el = document.querySelector('[data-slot="tooltip-content"]')
+      expect(el).not.toBeNull()
+      return el
+    })
+    expect(tip).toHaveTextContent('Configurações')
+  })
 })

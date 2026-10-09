@@ -14,6 +14,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 import { isActive, NAV_ITEMS } from './nav-items'
@@ -70,18 +75,25 @@ export function SiteHeader() {
     <header className="sticky top-0 z-10 border-b-2 border-muted bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 md:px-6">
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            render={
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="Abrir menu"
-                className="md:hidden"
-              />
-            }
-          >
-            <MenuIcon />
-          </SheetTrigger>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <SheetTrigger
+                  render={
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="Abrir menu"
+                      className="md:hidden"
+                    />
+                  }
+                />
+              }
+            >
+              <MenuIcon />
+            </TooltipTrigger>
+            <TooltipContent>Abrir menu</TooltipContent>
+          </Tooltip>
           <SheetContent side="left">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
@@ -98,7 +110,7 @@ export function SiteHeader() {
 
         <Link
           href="/"
-          className="flex items-center gap-2 font-display text-xl font-bold outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="flex h-12 items-center gap-2 font-display text-xl font-bold outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           <CodeXmlIcon aria-hidden className="text-link" />
           CodeLuv
@@ -111,18 +123,25 @@ export function SiteHeader() {
           <NavLinks pathname={pathname} variant="bar" />
         </nav>
 
-        <Link
-          href="/configuracoes"
-          aria-label="Configurações"
-          aria-current={settingsActive ? 'page' : undefined}
-          className={cn(
-            buttonVariants({ variant: 'outline', size: 'icon' }),
-            'ml-auto md:ml-0',
-            settingsActive && 'bg-muted text-foreground',
-          )}
-        >
-          <SettingsIcon />
-        </Link>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Link
+                href="/configuracoes"
+                aria-label="Configurações"
+                aria-current={settingsActive ? 'page' : undefined}
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'icon' }),
+                  'ml-auto md:ml-0',
+                  settingsActive && 'bg-muted text-foreground',
+                )}
+              />
+            }
+          >
+            <SettingsIcon />
+          </TooltipTrigger>
+          <TooltipContent>Configurações</TooltipContent>
+        </Tooltip>
       </div>
     </header>
   )

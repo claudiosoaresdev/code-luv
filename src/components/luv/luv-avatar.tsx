@@ -4,13 +4,12 @@ import { luvImage, type LuvState } from './luv-states'
 
 type LuvAvatarProps = {
   state?: LuvState
-  size?: 'lg' | 'xl'
 }
 
 /** A Luv é decorativa quando acompanha texto: alt vazio (DS, seção 6.2). */
-export function LuvAvatar({ state = 'ola', size = 'xl' }: LuvAvatarProps) {
+export function LuvAvatar({ state = 'ola' }: LuvAvatarProps) {
   return (
-    <Avatar size={size}>
+    <Avatar size="xl">
       <AvatarImage src={luvImage(state)} alt="" />
       <AvatarFallback aria-hidden>Luv</AvatarFallback>
     </Avatar>

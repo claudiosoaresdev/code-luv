@@ -23,7 +23,9 @@ export default function InicioPage() {
           </Link>
         </div>
       </div>
-      <LuvSays hero>Eu sou a Luv. Vou estudar com você! ✦</LuvSays>
+      <LuvSays hero>
+        Eu sou a Luv. Vou estudar com você! <span aria-hidden="true">✦</span>
+      </LuvSays>
     </section>
   )
 }
