@@ -138,6 +138,12 @@ for (const slug of [
   'imagens',
   'formularios',
   'secoes-e-rodape',
+  'cores',
+  'letras',
+  'espacamento',
+  'organizacao',
+  'celular',
+  'movimentos',
 ]) {
   test(`/aulas/${slug} abre sem violação de acessibilidade`, async ({
     page,
@@ -151,3 +157,69 @@ for (const slug of [
     expect(results.violations).toEqual([])
   })
 }
+
+const resultado = (page: import('@playwright/test').Page) =>
+  page.frameLocator('iframe[title="Resultado do seu código"]')
+
+test('aula de CSS: o estilo aparece no site e a conferência lê as regras', async ({
+  page,
+}) => {
+  await page.goto('/aulas/cores')
+  await expect(page.getByText(/site de exemplo/)).toBeVisible()
+
+  await escrever(
+    page,
+    'body {\n  background-color: lavenderblush;\n}\n\nh1 {\n  color: mediumvioletred;\n}\n\nh2 {\n  color: rebeccapurple;\n}\n',
+    'CSS',
+  )
+  await expect
+    .poll(() =>
+      resultado(page)
+        .locator('h1')
+        .first()
+        .evaluate((h1) => getComputedStyle(h1).color),
+    )
+    .toBe('rgb(199, 21, 133)')
+
+  await page.getByRole('button', { name: 'Conferir' }).click()
+  await expect(
+    page.getByText('Funcionou! Agora é só concluir a aula.'),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Concluir aula' }).click()
+  await expect(
+    page.getByRole('link', { name: 'Próxima aula: Letras' }),
+  ).toHaveAttribute('href', '/aulas/letras')
+
+  await page.goto('/meu-site')
+  await expect
+    .poll(() =>
+      page
+        .frameLocator('iframe[title="Seu site"]')
+        .locator('h1')
+        .first()
+        .evaluate((h1) => getComputedStyle(h1).color),
+    )
+    .toBe('rgb(199, 21, 133)')
+})
+
+test('aula de CSS: "Ver como celular" liga a media query', async ({ page }) => {
+  await page.goto('/aulas/celular')
+  await escrever(
+    page,
+    '@media (max-width: 400px) {\n  h1 {\n    font-size: 1.75rem;\n  }\n}\n',
+    'CSS',
+  )
+  const tamanhoDoTitulo = () =>
+    resultado(page)
+      .locator('h1')
+      .first()
+      .evaluate((h1) => getComputedStyle(h1).fontSize)
+
+  // largo: vale o tamanho normal do h1 (2em = 32px)
+  await expect.poll(tamanhoDoTitulo).toBe('32px')
+
+  const botao = page.getByRole('button', { name: 'Ver como celular' })
+  await botao.click()
+  await expect(botao).toHaveAttribute('aria-pressed', 'true')
+  await expect.poll(tamanhoDoTitulo).toBe('28px')
+})
