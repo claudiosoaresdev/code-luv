@@ -15,6 +15,7 @@ describe('HintPanel', () => {
       screen.getByRole('button', { name: 'Ver pista' }),
     ).toBeInTheDocument()
     expect(screen.queryByText('Pista 1 de 2')).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
   })
 
   it('anuncia a pista com educação (status, não alerta)', async () => {

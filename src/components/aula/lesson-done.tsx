@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import Link from 'next/link'
 
 import { LuvSays } from '@/components/luv/luv-says'
@@ -13,6 +13,7 @@ type LessonDoneProps = {
 
 /** Padrão "Conclusão de aula" (DS 9). O foco vai para o título ao aparecer. */
 export function LessonDone({ titulo, proxima }: LessonDoneProps) {
+  const tituloId = useId()
   const heading = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
@@ -21,19 +22,19 @@ export function LessonDone({ titulo, proxima }: LessonDoneProps) {
 
   return (
     <section
-      aria-labelledby="aula-concluida"
+      aria-labelledby={tituloId}
       className="flex flex-col items-center gap-6 text-center"
     >
       <h2
-        id="aula-concluida"
+        id={tituloId}
         ref={heading}
         tabIndex={-1}
         className="font-display text-3xl font-bold outline-none"
       >
         Aula concluída!
       </h2>
-      <LuvSays hero state="comemorar">
-        Você escreveu HTML de verdade. {titulo}: feito!
+      <LuvSays hero announce={false} state="comemorar">
+        Mandou bem! {titulo}: feito!
       </LuvSays>
       <div className="flex flex-wrap justify-center gap-3">
         {proxima && (

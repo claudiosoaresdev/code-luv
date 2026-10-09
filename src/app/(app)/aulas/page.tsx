@@ -42,7 +42,7 @@ export default function AulasPage() {
                 </ItemContent>
                 <ItemActions>
                   <span className="text-sm text-muted-foreground">
-                    ~{aula.duracaoMin} min
+                    cerca de {aula.duracaoMin} min
                   </span>
                 </ItemActions>
               </Item>

@@ -29,15 +29,18 @@ export function HintPanel({ pistas, solucao }: HintPanelProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      {abertas > 0 && (
-        <Alert variant="warning" role="status">
-          <LightbulbIcon />
-          <AlertTitle>
-            Pista {abertas} de {pistas.length}
-          </AlertTitle>
-          <AlertDescription>{pistas[abertas - 1]}</AlertDescription>
-        </Alert>
-      )}
+      {/* Região viva persistente: a pista é anunciada ao entrar aqui. */}
+      <div role="status">
+        {abertas > 0 && (
+          <Alert variant="warning" role="note">
+            <LightbulbIcon />
+            <AlertTitle>
+              Pista {abertas} de {pistas.length}
+            </AlertTitle>
+            <AlertDescription>{pistas[abertas - 1]}</AlertDescription>
+          </Alert>
+        )}
+      </div>
 
       {solucaoAberta && (
         <div

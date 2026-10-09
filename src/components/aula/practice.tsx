@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 import { LuvSays } from '@/components/luv/luv-says'
 import { Button } from '@/components/ui/button'
@@ -33,6 +33,8 @@ function falaDaLuv(faltam: number) {
  */
 export function Practice({ aula, proxima }: PracticeProps) {
   const { pratica } = aula
+  const tituloId = useId()
+  const ajudaId = useId()
   const [codigo, setCodigo] = useState(pratica.inicial)
   const [resultados, setResultados] = useState<CheckResult[] | null>(null)
   const [mostrarPistas, setMostrarPistas] = useState(false)
@@ -53,6 +55,7 @@ export function Practice({ aula, proxima }: PracticeProps) {
   }
 
   function recomecar() {
+    if (codigo === pratica.inicial) return // nada a desfazer
     const anterior = codigo
     mudarCodigo(pratica.inicial)
     toast.add({
@@ -76,8 +79,8 @@ export function Practice({ aula, proxima }: PracticeProps) {
   }
 
   return (
-    <section aria-labelledby="pratica" className="flex flex-col gap-5">
-      <h2 id="pratica" className="font-display text-2xl font-semibold">
+    <section aria-labelledby={tituloId} className="flex flex-col gap-5">
+      <h2 id={tituloId} className="font-display text-2xl font-semibold">
         Prática
       </h2>
 
@@ -128,14 +131,16 @@ export function Practice({ aula, proxima }: PracticeProps) {
         <Button
           size="lg"
           className="w-fit"
+          variant={tudoCerto ? 'default' : 'outline'}
           disabled={!tudoCerto}
-          aria-describedby={tudoCerto ? undefined : 'concluir-ajuda'}
+          focusableWhenDisabled
+          aria-describedby={tudoCerto ? undefined : ajudaId}
           onClick={concluir}
         >
           Concluir aula
         </Button>
         {!tudoCerto && (
-          <p id="concluir-ajuda" className="text-sm text-muted-foreground">
+          <p id={ajudaId} className="text-sm text-muted-foreground">
             Confira o exercício: quando todos os itens estiverem certos, você
             conclui a aula.
           </p>
