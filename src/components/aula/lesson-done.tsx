@@ -3,16 +3,22 @@
 import { useEffect, useId, useRef } from 'react'
 import Link from 'next/link'
 
-import { LuvSays } from '@/components/luv/luv-says'
+import { SitePreview } from '@/components/site-preview'
 import { buttonVariants } from '@/components/ui/button'
 
 type LessonDoneProps = {
   titulo: string
   proxima?: { slug: string; titulo: string }
+  /** O site da aluna já com a parte desta aula. */
+  siteHtml: string
 }
 
-/** Padrão "Conclusão de aula" (DS 9). O foco vai para o título ao aparecer. */
-export function LessonDone({ titulo, proxima }: LessonDoneProps) {
+/**
+ * Padrão "Conclusão de aula" (DS 9): o site com a parte nova, no lugar da
+ * Luv grande (a Luv do objetivo já está na tela — uma Luv por tela).
+ * O foco vai para o título ao aparecer.
+ */
+export function LessonDone({ titulo, proxima, siteHtml }: LessonDoneProps) {
   const tituloId = useId()
   const heading = useRef<HTMLHeadingElement>(null)
 
@@ -21,10 +27,7 @@ export function LessonDone({ titulo, proxima }: LessonDoneProps) {
   }, [])
 
   return (
-    <section
-      aria-labelledby={tituloId}
-      className="flex flex-col items-center gap-6 text-center"
-    >
+    <section aria-labelledby={tituloId} className="flex flex-col gap-5">
       <h2
         id={tituloId}
         ref={heading}
@@ -33,10 +36,11 @@ export function LessonDone({ titulo, proxima }: LessonDoneProps) {
       >
         Aula concluída!
       </h2>
-      <LuvSays hero announce={false} state="comemorar">
-        Mandou bem! {titulo}: feito!
-      </LuvSays>
-      <div className="flex flex-wrap justify-center gap-3">
+      <p className="text-lg">
+        Seu site ganhou uma parte nova: <strong>{titulo}</strong>.
+      </p>
+      <SitePreview html={siteHtml} />
+      <div className="flex flex-wrap gap-3">
         {proxima && (
           <Link
             href={`/aulas/${proxima.slug}`}
@@ -46,11 +50,17 @@ export function LessonDone({ titulo, proxima }: LessonDoneProps) {
           </Link>
         )}
         <Link
-          href="/aulas"
+          href="/meu-site"
           className={buttonVariants({
             variant: proxima ? 'outline' : 'default',
             size: 'lg',
           })}
+        >
+          Ver meu site
+        </Link>
+        <Link
+          href="/aulas"
+          className={buttonVariants({ variant: 'outline', size: 'lg' })}
         >
           Voltar para as aulas
         </Link>

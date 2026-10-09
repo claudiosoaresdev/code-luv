@@ -3,6 +3,12 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { aula } from '@/content/aulas/01-seu-primeiro-html/aula'
+import { salvarCodigo } from '@/lib/progresso/acoes'
+import {
+  atualizarProgresso,
+  esquecerProgressoEmMemoria,
+  obterEstado,
+} from '@/lib/progresso/store'
 
 import { Practice } from './practice'
 
@@ -33,7 +39,11 @@ const escrever = (codigo: string) =>
   fireEvent.change(editor(), { target: { value: codigo } })
 
 describe('Practice', () => {
-  beforeEach(() => add.mockClear())
+  beforeEach(() => {
+    add.mockClear()
+    localStorage.clear()
+    esquecerProgressoEmMemoria()
+  })
 
   it('aceita um id e pode receber foco programático na seção', () => {
     render(<Practice aula={aula} id="pratica" />)
@@ -198,5 +208,46 @@ describe('Practice', () => {
     expect(
       screen.getByRole('link', { name: 'Próxima aula: Títulos e parágrafos' }),
     ).toHaveAttribute('href', '/aulas/titulos-e-paragrafos')
+  })
+
+  it('retoma o código salvo da aula', () => {
+    atualizarProgresso((p) => salvarCodigo(p, aula.slug, '<h1>Guardado</h1>'))
+    render(<Practice aula={aula} />)
+
+    expect(editor()).toHaveValue('<h1>Guardado</h1>')
+  })
+
+  it('salva o código a cada mudança e conta as conferências', async () => {
+    const user = userEvent.setup()
+    render(<Practice aula={aula} />)
+
+    escrever('<h1>Oi</h1>')
+    await user.click(screen.getByRole('button', { name: 'Conferir' }))
+
+    expect(obterEstado().progresso.aulas[aula.slug]).toMatchObject({
+      codigo: '<h1>Oi</h1>',
+      conferencias: 1,
+    })
+  })
+
+  it('na conclusão mostra o site da aluna e avisa a conquista', async () => {
+    const user = userEvent.setup()
+    render(<Practice aula={aula} />)
+
+    escrever(aula.pratica.solucao)
+    await user.click(screen.getByRole('button', { name: 'Conferir' }))
+    await user.click(screen.getByRole('button', { name: 'Concluir aula' }))
+
+    expect(
+      screen.getByText(/Seu site ganhou uma parte nova/),
+    ).toBeInTheDocument()
+    expect(screen.getByTitle('Seu site').getAttribute('srcdoc')).toContain(
+      'Olá, eu sou a Ana',
+    )
+    expect(screen.queryByRole('img')).not.toBeInTheDocument() // sem a Luv grande
+    expect(add).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'Conquista: Hello, World' }),
+    )
+    expect(obterEstado().progresso.aulas[aula.slug].concluidaEm).toBeDefined()
   })
 })
