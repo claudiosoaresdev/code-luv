@@ -37,10 +37,10 @@ test.describe('navegação no notebook', () => {
     })
   }
 
-  test('vai do Início às Aulas pelo botão principal', async ({ page }) => {
+  test('no primeiro uso, pular leva à primeira aula', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('link', { name: 'Ver as aulas' }).click()
-    await expect(page).toHaveURL('/aulas')
+    await page.getByRole('button', { name: 'Pular' }).click()
+    await expect(page).toHaveURL('/aulas/seu-primeiro-html')
   })
 
   test('o link de pular leva o foco ao conteúdo', async ({ page }) => {

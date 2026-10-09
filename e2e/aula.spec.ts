@@ -1,16 +1,11 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, type Page, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
+import { escrever } from './helpers'
 
 test.use({ viewport: { width: 1280, height: 900 } })
 
 const URL_AULA = '/aulas/seu-primeiro-html'
-
-/** Substitui todo o código do editor (insertText não dispara atalhos por tecla). */
-async function escrever(page: Page, codigo: string) {
-  await page.getByRole('textbox', { name: 'Seu código HTML' }).click()
-  await page.keyboard.press('ControlOrMeta+A')
-  await page.keyboard.insertText(codigo)
-}
 
 test('da lista de aulas até concluir a aula 1', async ({ page }) => {
   await page.goto('/aulas')
