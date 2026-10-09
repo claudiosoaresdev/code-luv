@@ -6,6 +6,7 @@ import { SmartphoneIcon } from 'lucide-react'
 
 import { RetroWindow } from '@/components/retro-window'
 import { Toggle } from '@/components/ui/toggle'
+import { paraIframe } from '@/lib/base-path'
 import { cn } from '@/lib/utils'
 
 /** HU-04 pede o resultado "em cerca de um segundo"; 400ms evita piscar a cada tecla. */
@@ -56,7 +57,7 @@ export function ResultPreview({
       <RetroWindow title="Meu site">
         <iframe
           title="Resultado do seu código"
-          srcDoc={mostrado}
+          srcDoc={paraIframe(mostrado)}
           sandbox=""
           aria-describedby={ariaDescribedBy}
           className={cn(

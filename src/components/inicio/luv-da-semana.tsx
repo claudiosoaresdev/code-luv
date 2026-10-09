@@ -2,6 +2,7 @@ import Image from 'next/image'
 
 import { HeartIcon } from 'lucide-react'
 
+import { comBase } from '@/lib/base-path'
 import { falaDaSemana } from '@/lib/progresso/painel'
 import { cn } from '@/lib/utils'
 
@@ -28,7 +29,7 @@ export function LuvDaSemana({ nome, estudados, meta }: LuvDaSemanaProps) {
       )}
     >
       <Image
-        src="/images/luv/luv-notebook.webp"
+        src={comBase('/images/luv/luv-notebook.webp')}
         alt=""
         width={200}
         height={210}

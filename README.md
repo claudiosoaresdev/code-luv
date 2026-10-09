@@ -1,34 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeLuv
 
-## Getting Started
+Plataforma para quem nunca programou aprender HTML, CSS e (em breve) JavaScript construindo o próprio site pessoal, com a gatinha Luv. As aulas podem ser ouvidas em voz alta, praticadas na hora e somadas, uma a uma, ao site da aluna.
 
-First, run the development server:
+**No ar:** https://claudiosoaresdev.github.io/code-luv/
+
+O progresso fica só no navegador de quem estuda (`localStorage`); não há conta nem servidor.
+
+## Rodando localmente
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-## Learn More
+| Script                | O que faz                                                   |
+| --------------------- | ----------------------------------------------------------- |
+| `npm run dev`         | servidor de desenvolvimento                                 |
+| `npm run lint`        | ESLint                                                      |
+| `npm test`            | testes unitários (Vitest)                                   |
+| `npm run test:e2e`    | testes de ponta a ponta (Playwright + axe)                  |
+| `npm run build`       | build do Next.js                                            |
+| `npm run build:pages` | site estático em `out/`, com o prefixo `/code-luv` do Pages |
 
-To learn more about Next.js, take a look at the following resources:
+## Publicação
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Cada push na `main` roda `.github/workflows/pages.yml`: lint, testes, `build:pages` e publicação no GitHub Pages. No build do Pages, o Next.js gera um export estático (`output: 'export'`) sem Cache Components/Partial Prefetching, que não existem nesse modo.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Documentos
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Briefing](docs/briefing.md) — o que o produto é e para quem.
+- [Design system](docs/design-system.md) — identidade Y2K, componentes, voz da Luv e acessibilidade.
+- [Planos e specs](docs/superpowers/) — como cada parte foi planejada.

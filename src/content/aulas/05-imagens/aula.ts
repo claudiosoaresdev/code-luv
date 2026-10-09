@@ -11,7 +11,7 @@ export const aula: Aula = {
   pratica: {
     enunciado: [
       'Escreva uma imagem com <img>.',
-      'No atributo src, use o endereço /images/luv/ola.png.',
+      'No atributo src, use o endereço images/luv/ola.png.',
       'No atributo alt, descreva com suas palavras o que a imagem mostra.',
     ],
     inicial: '<!-- Coloque a imagem aqui embaixo -->\n',
@@ -30,9 +30,9 @@ export const aula: Aula = {
     ],
     pistas: [
       'A imagem não tem tag de fechar. Tudo fica dentro de uma tag só: <img src="..." alt="...">.',
-      'Fica assim: <img src="/images/luv/ola.png" alt="A gatinha Luv acenando">. Troque a descrição pelas suas palavras.',
+      'Fica assim: <img src="images/luv/ola.png" alt="A gatinha Luv acenando">. Troque a descrição pelas suas palavras.',
     ],
     solucao:
-      '<img src="/images/luv/ola.png" alt="A gatinha Luv acenando e dizendo olá" width="200">\n',
+      '<img src="images/luv/ola.png" alt="A gatinha Luv acenando e dizendo olá" width="200">\n',
   },
 }

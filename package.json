@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:pages": "EXPORTAR_ESTATICO=1 NEXT_PUBLIC_BASE_PATH=/code-luv next build",
     "start": "next start",
     "lint": "eslint .",
     "prepare": "husky",

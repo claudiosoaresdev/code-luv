@@ -1,3 +1,5 @@
+import { comBase } from '@/lib/base-path'
+
 export const LUV_STATES = [
   'ola',
   'aprender',
@@ -11,7 +13,7 @@ export const LUV_STATES = [
 
 export type LuvState = (typeof LUV_STATES)[number]
 
-const DEFAULT_ART = '/images/luv/ola.png'
+const DEFAULT_ART = comBase('/images/luv/ola.png')
 
 /**
  * Arte disponível em public/images/luv/. Estados sem arte própria usam a de

@@ -2,9 +2,21 @@ import type { NextConfig } from 'next'
 
 import createMDX from '@next/mdx'
 
+// Build do GitHub Pages (ver .github/workflows/pages.yml): site estático em
+// /code-luv. Sem as variáveis, nada muda (desenvolvimento e testes).
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || undefined
+const exportar = process.env.EXPORTAR_ESTATICO === '1'
+
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
+  basePath,
+  ...(exportar && {
+    output: 'export',
+    trailingSlash: true,
+    images: { unoptimized: true },
+  }),
+  // PPR não existe em export estático; o site estático serve HTML pronto.
+  cacheComponents: !exportar,
+  partialPrefetching: !exportar,
   turbopack: {
     rules: {
       '*.css': {

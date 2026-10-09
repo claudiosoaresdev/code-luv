@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { paraIframe } from '@/lib/base-path'
 import { concluirAula, salvarCodigo } from '@/lib/progresso/acoes'
 import {
   atualizarProgresso,
@@ -37,7 +38,7 @@ describe('MeuSite', () => {
     render(<MeuSite />)
 
     expect(screen.getByTitle('Seu site').getAttribute('srcdoc')).toBe(
-      '<h1>Olá, eu sou a Ana</h1>',
+      paraIframe('<h1>Olá, eu sou a Ana</h1>'),
     )
     expect(
       screen.getByRole('link', { name: 'Aula 1 de HTML · Seu primeiro HTML' }),
@@ -59,7 +60,9 @@ describe('MeuSite', () => {
     render(<MeuSite />)
 
     expect(screen.getByTitle('Seu site').getAttribute('srcdoc')).toBe(
-      '<style>\nh1 { color: purple; }\n</style>\n<h1>Olá, eu sou a Ana</h1>',
+      paraIframe(
+        '<style>\nh1 { color: purple; }\n</style>\n<h1>Olá, eu sou a Ana</h1>',
+      ),
     )
     expect(
       screen.getByRole('link', { name: 'Aula 1 de CSS · Cores' }),

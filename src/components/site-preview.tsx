@@ -1,4 +1,5 @@
 import { RetroWindow } from '@/components/retro-window'
+import { paraIframe } from '@/lib/base-path'
 import { cn } from '@/lib/utils'
 
 /** Mostrado quando o CSS aparece no site de exemplo (a aluna ainda não tem HTML). */
@@ -25,7 +26,7 @@ export function SitePreview({
     <RetroWindow title="Meu site">
       <iframe
         title={titulo}
-        srcDoc={html}
+        srcDoc={paraIframe(html)}
         aria-describedby={ariaDescribedBy}
         sandbox=""
         className={cn('h-64 w-full bg-white', className)}

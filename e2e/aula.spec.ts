@@ -120,7 +120,7 @@ test('a imagem da aula de imagens aparece no resultado', async ({ page }) => {
   await page.goto('/aulas/imagens')
   await escrever(
     page,
-    '<img src="/images/luv/ola.png" alt="A gatinha Luv acenando" width="200">',
+    '<img src="images/luv/ola.png" alt="A gatinha Luv acenando" width="200">',
   )
   const imagem = page
     .frameLocator('iframe[title="Resultado do seu código"]')

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { aula } from '@/content/aulas/01-seu-primeiro-html/aula'
 import { aula as cores } from '@/content/aulas/css-01-cores/aula'
+import { paraIframe } from '@/lib/base-path'
 import { concluirAula, salvarCodigo } from '@/lib/progresso/acoes'
 import {
   atualizarProgresso,
@@ -65,7 +66,7 @@ describe('Practice', () => {
     await waitFor(() =>
       expect(
         screen.getByTitle('Resultado do seu código').getAttribute('srcdoc'),
-      ).toBe('<h1>Só isto</h1>'),
+      ).toBe(paraIframe('<h1>Só isto</h1>')),
     )
   })
 
